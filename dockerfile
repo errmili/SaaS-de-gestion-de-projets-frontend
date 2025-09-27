@@ -3,27 +3,48 @@ FROM node:18-alpine AS build
 
 WORKDIR /app
 COPY package*.json ./
-COPY node_modules ./node_modules
+RUN npm ci || npm install --legacy-peer-deps
 COPY . .
-
-# Build production
 RUN npm run build:prod
 
-# SOLUTION : Copier manuellement index.html si absent
-RUN if [ ! -f /app/dist/projecthub-frontend/index.html ]; then \
-    cp /app/src/index.html /app/dist/projecthub-frontend/index.html; \
-    echo "✅ Index.html copié manuellement"; \
-fi
-
-# Vérifier que index.html est maintenant présent
-RUN ls -la /app/dist/projecthub-frontend/index.html
-
-# Stage 2: Nginx
+# Stage 2: Nginx pour Railway
 FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
-RUN rm -rf /etc/nginx/conf.d/*
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist/projecthub-frontend /usr/share/nginx/html
 
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+# Railway utilise PORT dynamique
+EXPOSE $PORT
+CMD ["sh", "-c", "sed -i 's/listen 80/listen $PORT/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
+
+
+
+# # Multi-stage build
+# FROM node:18-alpine AS build
+
+# WORKDIR /app
+# COPY package*.json ./
+# COPY node_modules ./node_modules
+# COPY . .
+
+# # Build production
+# RUN npm run build:prod
+
+# # SOLUTION : Copier manuellement index.html si absent
+# RUN if [ ! -f /app/dist/projecthub-frontend/index.html ]; then \
+#     cp /app/src/index.html /app/dist/projecthub-frontend/index.html; \
+#     echo "✅ Index.html copié manuellement"; \
+# fi
+
+# # Vérifier que index.html est maintenant présent
+# RUN ls -la /app/dist/projecthub-frontend/index.html
+
+# # Stage 2: Nginx
+# FROM nginx:alpine
+# RUN rm -rf /usr/share/nginx/html/*
+# RUN rm -rf /etc/nginx/conf.d/*
+# COPY nginx.conf /etc/nginx/nginx.conf
+# COPY --from=build /app/dist/projecthub-frontend /usr/share/nginx/html
+
+# EXPOSE 80
+# CMD ["nginx", "-g", "daemon off;"]
