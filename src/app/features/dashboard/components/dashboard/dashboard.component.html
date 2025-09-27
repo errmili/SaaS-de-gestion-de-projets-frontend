@@ -1,0 +1,361 @@
+<!-- src/app/features/dashboard/components/dashboard/dashboard.component.html - VERSION AMÉLIORÉE -->
+<div class="dashboard-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <!-- Dashboard content -->
+  <div *ngIf="!isLoading">
+    <!-- Header du dashboard -->
+    <div class="dashboard-header">
+      <div class="header-content">
+        <div class="title-section">
+          <h1>Dashboard</h1>
+          <p>
+            Overview of all projects and tasks
+            <!-- ✅ NOUVEAU - Indicateur de statut WebSocket -->
+            <span *ngIf="isWebSocketConnected" class="realtime-indicator connected" matTooltip="Real-time updates active">
+              <mat-icon>wifi</mat-icon>
+              Live
+            </span>
+            <span *ngIf="!isWebSocketConnected" class="realtime-indicator disconnected" matTooltip="Real-time updates unavailable">
+              <mat-icon>wifi_off</mat-icon>
+              Offline
+            </span>
+          </p>
+        </div>
+        <div class="header-actions">
+          <!-- ✅ NOUVEAU - Bouton Notifications -->
+          <div class="notification-button-container">
+            <button mat-icon-button
+                    (click)="openNotificationCenter()"
+                    [matTooltip]="getNotificationTooltip()"
+                    class="notification-button"
+                    appNotificationBadge
+                    [badgeType]="'unread'"
+                    [badgeColor]="getNotificationBadgeColor()"
+                    [badgeSize]="'medium'">
+              <mat-icon>notifications</mat-icon>
+            </button>
+          </div>
+
+          <!-- ✅ MODIFIÉ - Bouton Create Project avec badge -->
+          <button mat-stroked-button
+                  color="primary"
+                  (click)="createNewProject()"
+                  matTooltip="Create a new project">
+            <mat-icon>folder_open</mat-icon>
+            New Project
+          </button>
+
+          <!-- Export Button -->
+          <button mat-stroked-button class="export-btn">
+            <mat-icon>file_download</mat-icon>
+            Export
+          </button>
+
+          <!-- ✅ MODIFIÉ - New Task Button avec condition -->
+          <button mat-raised-button
+                  color="primary"
+                  (click)="createNewTask()"
+                  [disabled]="!selectedProjectId"
+                  [matTooltip]="selectedProjectId ? 'Create a new task' : 'Create a project first'">
+            <mat-icon>add</mat-icon>
+            New Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ MODIFIÉ - Message d'aide avec style amélioré -->
+    <div *ngIf="(dashboardData?.recentProjects?.length || 0) === 0"
+         class="empty-state">
+      <div class="empty-state-content">
+        <mat-icon class="empty-state-icon">folder_open</mat-icon>
+        <h3>Welcome to ProjectHub!</h3>
+        <p>Get started by creating your first project and experience real-time collaboration</p>
+        <button mat-raised-button
+                color="primary"
+                (click)="createNewProject()"
+                class="create-first-project-btn">
+          <mat-icon>add</mat-icon>
+          Create Your First Project
+        </button>
+      </div>
+    </div>
+
+    <!-- Métriques avec indicateurs temps réel -->
+    <div class="metrics-grid" *ngIf="(dashboardData?.recentProjects?.length || 0) > 0">
+      <div class="metric-card total-tasks">
+        <div class="metric-icon">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ stats?.totalTasks || 0 }}</div>
+          <div class="metric-label">Total Tasks</div>
+          <div class="metric-change positive">+12% from last week</div>
+        </div>
+        <!-- ✅ NOUVEAU - Indicateur de mise à jour temps réel -->
+        <div *ngIf="isWebSocketConnected" class="realtime-pulse" matTooltip="Live data"></div>
+      </div>
+
+      <div class="metric-card completed">
+        <div class="metric-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ stats?.completedTasksThisWeek || 0 }}</div>
+          <div class="metric-label">Completed</div>
+          <div class="metric-change positive">+18% from last week</div>
+        </div>
+        <div *ngIf="isWebSocketConnected" class="realtime-pulse" matTooltip="Live data"></div>
+      </div>
+
+      <div class="metric-card in-progress">
+        <div class="metric-icon">
+          <mat-icon>schedule</mat-icon>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ stats?.myOpenTasks || 0 }}</div>
+          <div class="metric-label">In Progress</div>
+          <div class="metric-change negative">-5% from last week</div>
+        </div>
+        <div *ngIf="isWebSocketConnected" class="realtime-pulse" matTooltip="Live data"></div>
+      </div>
+
+      <div class="metric-card velocity">
+        <div class="metric-icon">
+          <mat-icon>speed</mat-icon>
+        </div>
+        <div class="metric-content">
+          <div class="metric-value">{{ stats?.activeSprints || 0 }}</div>
+          <div class="metric-label">Active Sprints</div>
+          <div class="metric-change positive">+8% from last sprint</div>
+        </div>
+        <div *ngIf="isWebSocketConnected" class="realtime-pulse" matTooltip="Live data"></div>
+      </div>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="kanban-section" *ngIf="(dashboardData?.recentProjects?.length || 0) > 0">
+      <div class="kanban-header">
+        <h2>
+          {{ kanbanBoard?.projectName || 'Project Board' }}
+          <!-- ✅ NOUVEAU - Badge temps réel sur le titre du projet -->
+          <span *ngIf="isWebSocketConnected" class="live-badge" matTooltip="Real-time board">
+            <mat-icon>visibility</mat-icon>
+            LIVE
+          </span>
+        </h2>
+        <div class="kanban-actions">
+          <button mat-icon-button
+                  matTooltip="Refresh"
+                  (click)="refreshKanban()"
+                  [disabled]="isUpdatingTask">
+            <mat-icon>refresh</mat-icon>
+          </button>
+          <button mat-stroked-button
+                  (click)="createNewTask()"
+                  [disabled]="!selectedProjectId">
+            <mat-icon>add</mat-icon>
+            Add Task
+          </button>
+        </div>
+      </div>
+
+      <div class="kanban-container" cdkDropListGroup>
+        <div *ngFor="let column of kanbanColumns; trackBy: trackByColumnId" class="kanban-column">
+          <!-- Column Header -->
+          <div class="column-header">
+            <div class="column-info">
+              <mat-icon [ngClass]="'column-icon ' + column.id">
+                {{ getColumnIcon(column.status || '') }}
+              </mat-icon>
+              <span class="column-title">{{ column.name }}</span>
+              <span class="task-count">{{ column.taskCount || 0 }}</span>
+            </div>
+            <button mat-icon-button
+                    (click)="addTaskToColumn(column)"
+                    matTooltip="Add task"
+                    [disabled]="!selectedProjectId">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <!-- Task List avec Drag & Drop -->
+          <div class="task-list"
+               cdkDropList
+               [cdkDropListData]="column.tasks"
+               [id]="column.id!"
+               (cdkDropListDropped)="onTaskDrop($event)">
+
+            <div *ngFor="let task of column.tasks; trackBy: trackByTaskId"
+                 class="task-card"
+                 cdkDrag
+                 [cdkDragData]="task"
+                 (click)="openTask(task)"
+                 [attr.data-task-id]="task.id"
+                 [class.recently-updated]="isTaskRecentlyUpdated(task.id)"
+                 [class.new-task]="isTaskNew(task.id)">
+
+              <!-- ✅ NOUVEAU - Indicateurs visuels temps réel -->
+              <div *ngIf="isTaskNew(task.id)" class="task-indicator new-indicator" matTooltip="New task">
+                <mat-icon>fiber_new</mat-icon>
+              </div>
+              <div *ngIf="isTaskRecentlyUpdated(task.id)" class="task-indicator updated-indicator" matTooltip="Recently updated">
+                <mat-icon>update</mat-icon>
+              </div>
+
+              <!-- Drag Handle -->
+              <div class="drag-handle" cdkDragHandle>
+                <mat-icon>drag_indicator</mat-icon>
+              </div>
+
+              <!-- Task Header -->
+              <div class="task-header">
+                <mat-chip [ngClass]="'task-type ' + (task.taskType || 'task').toLowerCase()">
+                  {{ getTaskTypeLabel(task.taskType) }}
+                </mat-chip>
+                <mat-icon [ngClass]="'priority-icon ' + (task.priority || 'medium').toLowerCase()">
+                  {{ getPriorityIcon(task.priority) }}
+                </mat-icon>
+              </div>
+
+              <!-- Task Content -->
+              <h4 class="task-title">{{ task.title }}</h4>
+              <p *ngIf="task.description" class="task-description">
+                {{ task.description }}
+              </p>
+
+              <!-- Task Footer -->
+              <div class="task-footer">
+                <span class="task-key">{{ task.taskKey }}</span>
+                <div class="task-meta">
+                  <span *ngIf="task.dueDate"
+                        class="due-date"
+                        [ngClass]="{ 'overdue': isDueDateOverdue(task.dueDate) }">
+                    <mat-icon>schedule</mat-icon>
+                    {{ formatDueDate(task.dueDate) }}
+                  </span>
+                  <div *ngIf="task.assigneeName" class="assignee">
+                    {{ getAssigneeInitials(task.assigneeName) }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Drag Preview -->
+              <div *cdkDragPreview class="drag-preview">
+                <div class="task-preview">
+                  <span class="task-key">{{ task.taskKey }}</span>
+                  <h4>{{ task.title }}</h4>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placeholder quand on drag -->
+            <div class="cdk-drag-placeholder"></div>
+
+            <!-- Empty state pour colonne vide -->
+            <div *ngIf="!column.tasks || column.tasks.length === 0" class="empty-column">
+              <mat-icon>inbox</mat-icon>
+              <p>No tasks yet</p>
+              <button mat-button
+                      (click)="addTaskToColumn(column)"
+                      [disabled]="!selectedProjectId">
+                <mat-icon>add</mat-icon>
+                Add task
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading overlay pendant la mise à jour -->
+      <div *ngIf="isUpdatingTask" class="update-overlay">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Updating task...</p>
+      </div>
+    </div>
+
+    <!-- Recent Tasks Section avec indicateurs temps réel -->
+    <div class="recent-tasks-section" *ngIf="recentlyUpdatedTasks.length > 0">
+      <h3>
+        Recently Updated Tasks
+        <!-- ✅ NOUVEAU - Badge de nouveauté -->
+        <span *ngIf="isWebSocketConnected" class="live-badge small" matTooltip="Live updates">
+          <mat-icon>visibility</mat-icon>
+          LIVE
+        </span>
+      </h3>
+      <div class="recent-tasks-grid">
+        <mat-card *ngFor="let task of (dashboardData?.recentlyUpdatedTasks || []).slice(0, 6)"
+                  class="recent-task-card"
+                  [class.recently-updated]="isTaskRecentlyUpdated(task.id)">
+          <mat-card-content>
+            <div class="recent-task-header">
+              <span class="task-key">{{ task.taskKey }}</span>
+              <mat-chip [ngClass]="'status-chip ' + (task.status || 'todo').toLowerCase()">
+                {{ task.status }}
+              </mat-chip>
+              <!-- ✅ NOUVEAU - Indicateur de mise à jour récente -->
+              <div *ngIf="isTaskRecentlyUpdated(task.id)" class="update-pulse" matTooltip="Just updated"></div>
+            </div>
+            <h4>{{ task.title }}</h4>
+            <p class="assignee-info" *ngIf="task.assigneeName">
+              Assigned to: {{ task.assigneeName }}
+            </p>
+            <p class="update-time">
+              Updated {{ formatUpdateTime(task.updatedAt) }}
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+
+    <!-- My Tasks Section avec badges -->
+    <div class="my-tasks-section" *ngIf="myTasks.length > 0">
+      <h3>
+        My Tasks ({{ dashboardData?.myTasks?.length || 0 }})
+        <!-- ✅ NOUVEAU - Badge avec compte temps réel -->
+        <span *ngIf="unreadNotificationCount > 0"
+              class="notification-count-badge"
+              matTooltip="{{ unreadNotificationCount }} unread notifications">
+          {{ unreadNotificationCount }}
+        </span>
+      </h3>
+      <div class="my-tasks-list">
+        <mat-card *ngFor="let task of (dashboardData?.myTasks || []).slice(0, 5)"
+                  class="my-task-card"
+                  [class.recently-updated]="isTaskRecentlyUpdated(task.id)"
+                  [class.new-task]="isTaskNew(task.id)">
+          <mat-card-content>
+            <div class="task-summary">
+              <div class="task-info">
+                <span class="task-key">{{ task.taskKey }}</span>
+                <h4>{{ task.title }}</h4>
+                <p class="project-name">{{ task.projectName }}</p>
+              </div>
+              <div class="task-status">
+                <mat-chip [ngClass]="'status-chip ' + (task.status || 'todo').toLowerCase()">
+                  {{ task.status }}
+                </mat-chip>
+                <mat-icon *ngIf="task.priority"
+                         [ngClass]="'priority-icon ' + (task.priority || 'medium').toLowerCase()">
+                  {{ getPriorityIcon(task.priority) }}
+                </mat-icon>
+                <!-- ✅ NOUVEAU - Indicateurs temps réel sur mes tâches -->
+                <div *ngIf="isTaskNew(task.id)" class="mini-indicator new" matTooltip="New">N</div>
+                <div *ngIf="isTaskRecentlyUpdated(task.id)" class="mini-indicator updated" matTooltip="Updated">U</div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ NOUVEAU - Centre de notifications intégré -->
+  <app-notification-center #notificationCenter></app-notification-center>
+</div>

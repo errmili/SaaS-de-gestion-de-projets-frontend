@@ -1,0 +1,166 @@
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <h2 mat-dialog-title>Create New Task</h2>
+
+  <mat-dialog-content class="dialog-content">
+    <!-- Task Title -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Task Title *</mat-label>
+      <input matInput
+             formControlName="title"
+             placeholder="Enter task title"
+             maxlength="200">
+      <mat-error *ngIf="taskForm.get('title')?.hasError('required')">
+        Task title is required
+      </mat-error>
+      <mat-error *ngIf="taskForm.get('title')?.hasError('minlength')">
+        Task title must be at least 3 characters
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Task Description -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput
+                formControlName="description"
+                placeholder="Describe what needs to be done"
+                rows="4"
+                maxlength="1000"></textarea>
+      <mat-hint>Optional task description</mat-hint>
+    </mat-form-field>
+
+    <!-- Task Type and Priority Row -->
+    <div class="form-row">
+      <!-- Task Type -->
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Task Type</mat-label>
+        <mat-select formControlName="taskType">
+          <mat-option value="TASK">
+            <span class="task-type-option">
+              <mat-icon class="task-type-icon task">assignment</mat-icon>
+              Task
+            </span>
+          </mat-option>
+          <mat-option value="BUG">
+            <span class="task-type-option">
+              <mat-icon class="task-type-icon bug">bug_report</mat-icon>
+              Bug
+            </span>
+          </mat-option>
+          <mat-option value="STORY">
+            <span class="task-type-option">
+              <mat-icon class="task-type-icon story">library_books</mat-icon>
+              Story
+            </span>
+          </mat-option>
+          <mat-option value="EPIC">
+            <span class="task-type-option">
+              <mat-icon class="task-type-icon epic">stars</mat-icon>
+              Epic
+            </span>
+          </mat-option>
+          <mat-option value="SUBTASK">
+            <span class="task-type-option">
+              <mat-icon class="task-type-icon subtask">subdirectory_arrow_right</mat-icon>
+              Subtask
+            </span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Priority -->
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Priority</mat-label>
+        <mat-select formControlName="priority">
+          <mat-option value="LOW">
+            <span class="priority-option">
+              <mat-icon class="priority-icon low">keyboard_arrow_down</mat-icon>
+              Low
+            </span>
+          </mat-option>
+          <mat-option value="MEDIUM">
+            <span class="priority-option">
+              <mat-icon class="priority-icon medium">remove</mat-icon>
+              Medium
+            </span>
+          </mat-option>
+          <mat-option value="HIGH">
+            <span class="priority-option">
+              <mat-icon class="priority-icon high">keyboard_arrow_up</mat-icon>
+              High
+            </span>
+          </mat-option>
+          <mat-option value="CRITICAL">
+            <span class="priority-option">
+              <mat-icon class="priority-icon critical">priority_high</mat-icon>
+              Critical
+            </span>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <!-- Initial Status (if creating from column) -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="initialStatus">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status" [disabled]="true">
+        <mat-option [value]="initialStatus">
+          <span class="status-option">
+            <mat-icon [ngClass]="'status-icon ' + (initialStatus || '').toLowerCase()">
+              {{ getStatusIcon(initialStatus || '') }}
+            </mat-icon>
+            {{ getStatusLabel(initialStatus || '') }}
+          </span>
+        </mat-option>
+      </mat-select>
+      <mat-hint>Task will be created in {{ getStatusLabel(initialStatus || '') }} column</mat-hint>
+    </mat-form-field>
+
+    <!-- Story Points -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Story Points</mat-label>
+      <input matInput
+             type="number"
+             formControlName="storyPoints"
+             placeholder="Estimate effort (1-20)"
+             min="1"
+             max="20">
+      <mat-hint>Optional: Estimate the effort required (1-20 points)</mat-hint>
+    </mat-form-field>
+
+    <!-- Due Date -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Due Date</mat-label>
+      <input matInput
+             type="date"
+             formControlName="dueDate">
+      <mat-hint>Optional: When should this task be completed</mat-hint>
+    </mat-form-field>
+
+    <!-- Project Info (Read-only) -->
+    <mat-form-field appearance="outline" class="full-width" *ngIf="projectName">
+      <mat-label>Project</mat-label>
+      <input matInput
+             [value]="projectName"
+             readonly>
+      <mat-hint>This task will be created in the current project</mat-hint>
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button
+            type="button"
+            (click)="onCancel()"
+            [disabled]="isCreating">
+      Cancel
+    </button>
+
+    <button mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="taskForm.invalid || isCreating">
+      <mat-icon *ngIf="isCreating" class="spinning">sync</mat-icon>
+      <mat-icon *ngIf="!isCreating">add_task</mat-icon>
+      {{ isCreating ? 'Creating...' : 'Create Task' }}
+    </button>
+  </mat-dialog-actions>
+</form>

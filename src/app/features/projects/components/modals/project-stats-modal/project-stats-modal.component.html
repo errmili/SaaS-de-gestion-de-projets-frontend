@@ -1,0 +1,327 @@
+<div class="project-stats-modal">
+  <!-- Modal Header -->
+  <div class="modal-header" mat-dialog-title>
+    <div class="header-info">
+      <div class="project-key-badge">{{ project.key }}</div>
+      <div class="project-title-section">
+        <h2>{{ project.name }} - Statistics</h2>
+        <div class="project-meta">
+          <mat-icon>bar_chart</mat-icon>
+          <span>Project Analytics & Insights</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button mat-icon-button
+              (click)="refreshStats()"
+              matTooltip="Refresh statistics"
+              [disabled]="isLoading">
+        <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+      </button>
+      <button mat-icon-button
+              (click)="onClose()"
+              matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Content -->
+  <mat-dialog-content class="dialog-content">
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="loading-container">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Loading project statistics...</p>
+    </div>
+
+    <!-- Stats Content -->
+    <div *ngIf="!isLoading && projectStats" class="stats-content">
+
+      <!-- Overview Cards -->
+      <div class="overview-section">
+        <h3>Project Overview</h3>
+        <div class="overview-grid">
+          <div class="overview-card tasks">
+            <div class="card-icon">
+              <mat-icon>assignment</mat-icon>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ formatNumber(projectStats.totalTasks) }}</div>
+              <div class="card-label">Total Tasks</div>
+            </div>
+          </div>
+
+          <div class="overview-card members">
+            <div class="card-icon">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ formatNumber(projectStats.totalMembers) }}</div>
+              <div class="card-label">Team Members</div>
+            </div>
+          </div>
+
+          <div class="overview-card completion">
+            <div class="card-icon">
+              <mat-icon>trending_up</mat-icon>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ getCompletionPercentage() }}%</div>
+              <div class="card-label">Completion Rate</div>
+            </div>
+          </div>
+
+          <div class="overview-card sprints">
+            <div class="card-icon">
+              <mat-icon>speed</mat-icon>
+            </div>
+            <div class="card-content">
+              <div class="card-value">{{ formatNumber(projectStats.activeSprints) }}</div>
+              <div class="card-label">Active Sprints</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress Section -->
+      <div class="progress-section">
+        <h3>Project Progress</h3>
+        <div class="progress-cards">
+          <mat-card class="progress-card">
+            <mat-card-header>
+              <mat-card-title>Task Completion</mat-card-title>
+              <mat-card-subtitle>{{ projectStats.completedTasks }} of {{ projectStats.totalTasks }} tasks completed</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="progress-display">
+                <div class="progress-circle">
+                  <span class="progress-text">{{ getCompletionPercentage() }}%</span>
+                </div>
+                <mat-progress-bar
+                  [value]="getCompletionPercentage()"
+                  [color]="getProgressColor()"
+                  mode="determinate">
+                </mat-progress-bar>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="progress-card" *ngIf="projectStats.totalSprints && projectStats.totalSprints > 0">
+            <mat-card-header>
+              <mat-card-title>Sprint Progress</mat-card-title>
+              <mat-card-subtitle>{{ projectStats.completedSprints }} of {{ projectStats.totalSprints }} sprints completed</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="progress-display">
+                <div class="progress-circle">
+                  <span class="progress-text">{{ getSprintProgress() }}%</span>
+                </div>
+                <mat-progress-bar
+                  [value]="getSprintProgress()"
+                  color="accent"
+                  mode="determinate">
+                </mat-progress-bar>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <h3>Task Distribution</h3>
+        <div class="charts-grid">
+
+          <!-- Tasks by Status Chart -->
+          <mat-card class="chart-card" *ngIf="hasTaskData">
+            <mat-card-header>
+              <mat-card-title>Tasks by Status</mat-card-title>
+              <mat-card-subtitle>{{ totalTasksProcessed }} total tasks</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <div class="chart-legend">
+                  <div *ngFor="let item of tasksByStatusData" class="legend-item">
+                    <div class="legend-color" [style.background-color]="item.color"></div>
+                    <div class="legend-info">
+                      <span class="legend-label">{{ item.name }}</span>
+                      <span class="legend-value">{{ item.value }} ({{ getStatusPercentage(item) }}%)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="simple-chart">
+                  <div *ngFor="let item of tasksByStatusData"
+                       class="chart-bar"
+                       [style.width.%]="getStatusPercentage(item)"
+                       [style.background-color]="item.color"
+                       [matTooltip]="item.name + ': ' + item.value + ' tasks'">
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Tasks by Priority Chart -->
+          <mat-card class="chart-card" *ngIf="hasPriorityData">
+            <mat-card-header>
+              <mat-card-title>Tasks by Priority</mat-card-title>
+              <mat-card-subtitle>Priority distribution</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <div class="chart-legend">
+                  <div *ngFor="let item of tasksByPriorityData" class="legend-item">
+                    <div class="legend-color" [style.background-color]="item.color"></div>
+                    <div class="legend-info">
+                      <span class="legend-label">{{ item.name }}</span>
+                      <span class="legend-value">{{ item.value }} ({{ getPriorityPercentage(item) }}%)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="simple-chart">
+                  <div *ngFor="let item of tasksByPriorityData"
+                       class="chart-bar"
+                       [style.width.%]="getPriorityPercentage(item)"
+                       [style.background-color]="item.color"
+                       [matTooltip]="item.name + ': ' + item.value + ' tasks'">
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Tasks by Type Chart -->
+          <mat-card class="chart-card" *ngIf="hasTypeData">
+            <mat-card-header>
+              <mat-card-title>Tasks by Type</mat-card-title>
+              <mat-card-subtitle>Task type breakdown</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-container">
+                <div class="chart-legend">
+                  <div *ngFor="let item of tasksByTypeData" class="legend-item">
+                    <div class="legend-color" [style.background-color]="item.color"></div>
+                    <div class="legend-info">
+                      <span class="legend-label">{{ item.name }}</span>
+                      <span class="legend-value">{{ item.value }} ({{ getTypePercentage(item) }}%)</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="simple-chart">
+                  <div *ngFor="let item of tasksByTypeData"
+                       class="chart-bar"
+                       [style.width.%]="getTypePercentage(item)"
+                       [style.background-color]="item.color"
+                       [matTooltip]="item.name + ': ' + item.value + ' tasks'">
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Detailed Stats Section -->
+      <div class="detailed-stats-section">
+        <h3>Detailed Statistics</h3>
+        <div class="stats-tables">
+
+          <!-- Performance Metrics -->
+          <mat-card class="stats-table-card">
+            <mat-card-header>
+              <mat-card-title>Performance Metrics</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="stats-table">
+                <div class="stat-row">
+                  <span class="stat-label">Average Story Points per Task</span>
+                  <span class="stat-value">{{ formatDecimal(projectStats.averageStoryPointsPerTask) }}</span>
+                </div>
+                <div class="stat-row" *ngIf="projectStats.averageTasksPerSprint">
+                  <span class="stat-label">Average Tasks per Sprint</span>
+                  <span class="stat-value">{{ formatDecimal(projectStats.averageTasksPerSprint) }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Completion Rate</span>
+                  <span class="stat-value">{{ getCompletionPercentage() }}%</span>
+                </div>
+                <div class="stat-row" *ngIf="projectStats.totalSprints">
+                  <span class="stat-label">Sprint Success Rate</span>
+                  <span class="stat-value">{{ getSprintProgress() }}%</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Task Breakdown -->
+          <mat-card class="stats-table-card">
+            <mat-card-header>
+              <mat-card-title>Task Status Breakdown</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="stats-table">
+                <div class="stat-row">
+                  <span class="stat-label">
+                    <mat-icon class="status-icon todo">radio_button_unchecked</mat-icon>
+                    To Do
+                  </span>
+                  <span class="stat-value">{{ formatNumber(projectStats.todoTasks) }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">
+                    <mat-icon class="status-icon in-progress">schedule</mat-icon>
+                    In Progress
+                  </span>
+                  <span class="stat-value">{{ formatNumber(projectStats.inProgressTasks) }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">
+                    <mat-icon class="status-icon completed">check_circle</mat-icon>
+                    Completed
+                  </span>
+                  <span class="stat-value">{{ formatNumber(projectStats.completedTasks) }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">
+                    <mat-icon class="status-icon blocked">block</mat-icon>
+                    Blocked
+                  </span>
+                  <span class="stat-value">{{ formatNumber(projectStats.blockedTasks) }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!hasTaskData && !hasPriorityData && !hasTypeData" class="empty-stats">
+        <mat-icon class="empty-icon">insert_chart</mat-icon>
+        <h3>No Statistics Available</h3>
+        <p>This project doesn't have enough data to generate statistics yet.</p>
+        <p>Create some tasks to see detailed analytics!</p>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <!-- Modal Actions -->
+  <mat-dialog-actions class="dialog-actions">
+    <div class="actions-container">
+      <span class="last-updated" *ngIf="projectStats">
+        Last updated: {{ project.updatedAt ? (project.updatedAt | date:'medium') : 'Never' }}
+      </span>
+
+      <div class="action-buttons">
+        <button mat-button (click)="refreshStats()" [disabled]="isLoading">
+          <mat-icon>refresh</mat-icon>
+          Refresh
+        </button>
+        <button mat-raised-button color="primary" (click)="onClose()">
+          Close
+        </button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+</div>

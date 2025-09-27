@@ -1,0 +1,6 @@
+npm-debug.log*
+.angular
+dist
+coverage
+.env
+.git

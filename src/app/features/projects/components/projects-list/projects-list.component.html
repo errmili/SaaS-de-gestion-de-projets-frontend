@@ -1,0 +1,335 @@
+<div class="projects-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="title-section">
+        <h1>My Projects</h1>
+        <p>Manage and track all your projects</p>
+      </div>
+      <div class="header-actions">
+        <button mat-icon-button
+                (click)="refreshProjects()"
+                matTooltip="Refresh projects"
+                [disabled]="isLoading">
+          <mat-icon [class.spinning]="isLoading">refresh</mat-icon>
+        </button>
+        <button mat-raised-button
+                color="primary"
+                (click)="createNewProject()">
+          <mat-icon>add</mat-icon>
+          New Project
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading your projects...</p>
+  </div>
+
+  <!-- Page Content -->
+  <div *ngIf="!isLoading" class="page-content">
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <div class="stat-icon">
+          <mat-icon>folder</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ totalProjects }}</div>
+          <div class="stat-label">Total Projects</div>
+        </div>
+      </div>
+
+      <div class="stat-card active">
+        <div class="stat-icon">
+          <mat-icon>play_circle</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ activeProjects }}</div>
+          <div class="stat-label">Active Projects</div>
+        </div>
+      </div>
+
+      <div class="stat-card completed">
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ completedProjects }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+      </div>
+
+      <div class="stat-card tasks">
+        <div class="stat-icon">
+          <mat-icon>assignment</mat-icon>
+        </div>
+        <div class="stat-content">
+          <div class="stat-value">{{ totalTasks }}</div>
+          <div class="stat-label">Total Tasks</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters Section -->
+    <mat-card class="filters-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>filter_list</mat-icon>
+          Filters
+        </mat-card-title>
+        <mat-card-subtitle *ngIf="hasFiltersApplied">
+          {{ filteredProjectsCount }} of {{ totalProjects }} projects shown
+        </mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="filters-grid">
+          <!-- Search -->
+          <mat-form-field appearance="outline" class="search-field">
+            <mat-label>Search projects</mat-label>
+            <input matInput
+                   [formControl]="searchControl"
+                   placeholder="Search by name, description or key">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <!-- Status Filter -->
+          <mat-form-field appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select [formControl]="statusFilter">
+              <mat-option *ngFor="let status of availableStatuses"
+                         [value]="status.value">
+                <span class="filter-option">
+                  <mat-icon *ngIf="status.value"
+                           [ngClass]="'status-icon ' + status.value.toLowerCase()">
+                    {{ getStatusIcon(status.value) }}
+                  </mat-icon>
+                  {{ status.label }}
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Priority Filter -->
+          <mat-form-field appearance="outline">
+            <mat-label>Priority</mat-label>
+            <mat-select [formControl]="priorityFilter">
+              <mat-option *ngFor="let priority of availablePriorities"
+                         [value]="priority.value">
+                <span class="filter-option">
+                  <mat-icon *ngIf="priority.value"
+                           [style.color]="getPriorityColor(priority.value)">
+                    {{ getPriorityIcon(priority.value) }}
+                  </mat-icon>
+                  {{ priority.label }}
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Clear Filters -->
+        <div class="filter-actions" *ngIf="hasFiltersApplied">
+          <button mat-stroked-button
+                  (click)="clearFilters()"
+                  class="clear-filters-btn">
+            <mat-icon>clear</mat-icon>
+            Clear Filters
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Projects Grid -->
+    <div class="projects-section">
+      <div class="section-header">
+        <h2>
+          <mat-icon>view_module</mat-icon>
+          Projects ({{ filteredProjectsCount }})
+        </h2>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="filteredProjectsCount === 0 && !isLoading" class="empty-state">
+        <mat-icon class="empty-icon">folder_open</mat-icon>
+        <h3>No projects found</h3>
+        <p *ngIf="hasFiltersApplied">Try adjusting your filters</p>
+        <p *ngIf="!hasFiltersApplied">Create your first project to get started</p>
+        <button mat-raised-button
+                color="primary"
+                *ngIf="!hasFiltersApplied"
+                (click)="createNewProject()">
+          <mat-icon>add</mat-icon>
+          Create Project
+        </button>
+        <button mat-stroked-button
+                *ngIf="hasFiltersApplied"
+                (click)="clearFilters()">
+          Clear Filters
+        </button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div *ngIf="filteredProjectsCount > 0" class="projects-grid">
+        <mat-card *ngFor="let project of filteredProjects; trackBy: trackByProjectId"
+                  class="project-card"
+                  [ngClass]="'status-' + (project.status || 'active').toLowerCase()">
+
+          <!-- Card Header -->
+          <mat-card-header>
+            <div class="project-header">
+              <div class="project-title-section">
+                <div class="project-key-badge">{{ project.key }}</div>
+                <h3 class="project-title"
+                   (click)="editProject(project)"
+                   matTooltip="Click to edit">
+                  {{ project.name }}
+                </h3>
+              </div>
+
+              <div class="project-status">
+                <mat-chip [ngClass]="'status-chip ' + (project.status || 'active').toLowerCase()">
+                  <mat-icon>{{ getStatusIcon(project.status) }}</mat-icon>
+                  {{ project.status || 'Active' }}
+                </mat-chip>
+              </div>
+            </div>
+          </mat-card-header>
+
+          <!-- Card Content -->
+          <mat-card-content>
+            <!-- Description -->
+            <p *ngIf="project.description" class="project-description">
+              {{ project.description }}
+            </p>
+            <p *ngIf="!project.description" class="no-description">
+              No description provided
+            </p>
+
+            <!-- Project Info Grid -->
+            <div class="project-info-grid">
+              <!-- Priority -->
+              <div class="info-item">
+                <label>Priority</label>
+                <div class="priority-value">
+                  <mat-icon [style.color]="getPriorityColor(project.priority)">
+                    {{ getPriorityIcon(project.priority) }}
+                  </mat-icon>
+                  <span>{{ project.priority || 'Medium' }}</span>
+                </div>
+              </div>
+
+              <!-- Tasks -->
+              <div class="info-item">
+                <label>Tasks</label>
+                <div class="tasks-value">
+                  <mat-icon>assignment</mat-icon>
+                  <span>{{ project.taskCount || 0 }}</span>
+                </div>
+              </div>
+
+              <!-- Members -->
+              <div class="info-item">
+                <label>Members</label>
+                <div class="members-value">
+                  <mat-icon>people</mat-icon>
+                  <span>{{ project.memberCount || 0 }}</span>
+                </div>
+              </div>
+
+              <!-- Created -->
+              <div class="info-item">
+                <label>Created</label>
+                <div class="date-value">
+                  <mat-icon>calendar_today</mat-icon>
+                  <span>{{ formatDate(project.createdAt) }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Progress Bar (si applicable) -->
+            <div *ngIf="project.taskCount && project.taskCount > 0" class="progress-section">
+              <div class="progress-label">
+                <span>Progress</span>
+                <span class="progress-percentage">{{ calculateProgress(project) | number:'1.0-0' }}%</span>
+              </div>
+              <mat-progress-bar
+                [value]="calculateProgress(project)"
+                mode="determinate"
+                [color]="getStatusColor(project.status)">
+              </mat-progress-bar>
+            </div>
+
+            <!-- Dates Info -->
+            <div *ngIf="project.startDate || project.endDate" class="dates-section">
+              <div class="date-item" *ngIf="project.startDate">
+                <mat-icon>event</mat-icon>
+                <span>Started: {{ formatDate(project.startDate) }}</span>
+              </div>
+              <div class="date-item" *ngIf="project.endDate">
+                <mat-icon [ngClass]="{ 'overdue': getDaysRemaining(project.endDate)! < 0 }">
+                  event_available
+                </mat-icon>
+                <span [ngClass]="{ 'overdue': getDaysRemaining(project.endDate)! < 0 }">
+                  Due: {{ formatDate(project.endDate) }}
+                  <span *ngIf="getDaysRemaining(project.endDate) !== null">
+                    ({{ getDaysRemaining(project.endDate)! > 0 ? getDaysRemaining(project.endDate) + ' days left' : Math.abs(getDaysRemaining(project.endDate)!) + ' days overdue' }})
+                  </span>
+                </span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <!-- Card Actions -->
+          <mat-card-actions>
+            <div class="card-actions">
+              <!-- Primary Actions -->
+              <button mat-button
+                      color="primary"
+                      (click)="editProject(project)">
+                <mat-icon>edit</mat-icon>
+                Edit
+              </button>
+
+              <button mat-button
+                      (click)="viewProjectStats(project)">
+                <mat-icon>bar_chart</mat-icon>
+                Stats
+              </button>
+
+              <!-- More Actions Menu -->
+              <button mat-icon-button [matMenuTriggerFor]="projectMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+
+              <mat-menu #projectMenu="matMenu">
+                <button mat-menu-item (click)="duplicateProject(project)">
+                  <mat-icon>content_copy</mat-icon>
+                  Duplicate
+                </button>
+                <button mat-menu-item
+                        *ngIf="project.status !== 'ARCHIVED'"
+                        (click)="archiveProject(project)">
+                  <mat-icon>archive</mat-icon>
+                  Archive
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item
+                        (click)="editProject(project)"
+                        class="danger-action">
+                  <mat-icon>delete</mat-icon>
+                  Delete
+                </button>
+              </mat-menu>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

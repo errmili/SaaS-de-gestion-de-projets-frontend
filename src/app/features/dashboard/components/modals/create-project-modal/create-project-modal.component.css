@@ -1,0 +1,94 @@
+.dialog-content {
+  min-width: 500px;
+  max-width: 600px;
+  padding: 20px 24px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.date-range {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.date-field {
+  flex: 1;
+}
+
+.dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
+}
+
+/* Priority icons */
+.priority-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.priority-icon.low {
+  color: #4caf50;
+}
+
+.priority-icon.medium {
+  color: #ff9800;
+}
+
+.priority-icon.high {
+  color: #f44336;
+}
+
+.priority-icon.critical {
+  color: #d32f2f;
+}
+
+/* Spinning animation for loading */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Form styling */
+h2[mat-dialog-title] {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Focus states */
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper:hover .mdc-notched-outline .mdc-notched-outline__leading,
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper:hover .mdc-notched-outline .mdc-notched-outline__notch,
+.mat-mdc-form-field:not(.mat-form-field-disabled) .mat-mdc-text-field-wrapper:hover .mdc-notched-outline .mdc-notched-outline__trailing {
+  border-color: #5d4e75;
+}
+
+/* Button styling */
+button[mat-raised-button] {
+  min-width: 120px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dialog-content {
+    min-width: unset;
+    width: 90vw;
+    max-width: 400px;
+  }
+
+  .date-range {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

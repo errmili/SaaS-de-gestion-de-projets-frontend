@@ -1,0 +1,197 @@
+<!-- src/app/layout/main-layout/main-layout.component.html - VERSION MISE À JOUR -->
+<div class="main-layout">
+  <!-- Header -->
+  <mat-toolbar class="app-header">
+    <div class="header-content">
+      <!-- Logo -->
+      <div class="logo">
+        <mat-icon>assignment</mat-icon>
+        <span>ProjectHub</span>
+      </div>
+
+      <!-- Search bar -->
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput placeholder="Search tasks, projects, people...">
+        </mat-form-field>
+      </div>
+
+      <!-- Actions -->
+      <div class="header-actions">
+        <!-- ✅ NOUVEAU - Bouton Notifications avec Badge et États -->
+        <div class="notification-button-container">
+          <button mat-icon-button
+                  (click)="onNotificationButtonClick()"
+                  [matTooltip]="getNotificationTooltip()"
+                  class="notification-button"
+                  [class.has-error]="!!notificationError"
+                  [class.disconnected]="!isWebSocketConnected"
+                  appNotificationBadge
+                  [badgeType]="'unread'"
+                  [badgeColor]="getNotificationBadgeColor()"
+                  [badgeSize]="'medium'">
+
+            <!-- Icône principale -->
+            <mat-icon>notifications</mat-icon>
+
+            <!-- ✅ NOUVEAU - Indicateur de statut de connexion -->
+            <div *ngIf="showConnectionStatus()" class="connection-status-indicator">
+              <mat-icon *ngIf="notificationError" class="error-icon">error</mat-icon>
+              <mat-icon *ngIf="!isWebSocketConnected && !notificationError" class="offline-icon">
+                wifi_off
+              </mat-icon>
+            </div>
+          </button>
+        </div>
+
+        <!-- Bouton Create (existant) -->
+        <button mat-raised-button color="primary" (click)="createNewProject()">
+          <mat-icon>add</mat-icon>
+          Create
+        </button>
+
+        <!-- Menu utilisateur (existant) -->
+        <button mat-icon-button [matMenuTriggerFor]="userMenu">
+          <mat-icon>account_circle</mat-icon>
+        </button>
+
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>person</mat-icon>
+            Profile
+          </button>
+          <button mat-menu-item>
+            <mat-icon>settings</mat-icon>
+            Settings
+          </button>
+          <!-- ✅ NOUVEAU - Options de notifications dans le menu -->
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="openNotificationCenter()">
+            <mat-icon>notifications</mat-icon>
+            Notifications
+            <span *ngIf="unreadNotificationCount > 0" class="menu-badge">
+              {{ unreadNotificationCount }}
+            </span>
+          </button>
+          <button mat-menu-item
+                  (click)="markAllNotificationsAsRead()"
+                  [disabled]="unreadNotificationCount === 0">
+            <mat-icon>done_all</mat-icon>
+            Mark all as read
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+  </mat-toolbar>
+
+  <!-- Sidebar + Content -->
+  <div class="main-content">
+    <!-- Sidebar -->
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav mode="side" opened class="sidebar">
+        <!-- Workspace info -->
+        <div class="workspace-info">
+          <h4>TechCorp Team</h4>
+          <p>12 members</p>
+        </div>
+
+        <!-- Navigation avec badges -->
+        <nav class="nav-menu">
+          <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+            <mat-icon>dashboard</mat-icon>
+            Dashboard
+          </a>
+
+          <a mat-list-item routerLink="/projects" routerLinkActive="active">
+            <mat-icon>folder</mat-icon>
+            My Projects
+          </a>
+
+          <!-- ✅ MODIFIÉ - My Tasks avec badge -->
+          <a mat-list-item
+             routerLink="/my-tasks"
+             routerLinkActive="active"
+             appNotificationBadge
+             [badgeType]="'tasks'"
+             [badgeColor]="'primary'"
+             [badgeSize]="'small'"
+             [badgePosition]="'top-right'">
+            <mat-icon>task</mat-icon>
+            My Tasks
+          </a>
+
+          <a mat-list-item routerLink="/team" routerLinkActive="active">
+            <mat-icon>people</mat-icon>
+            Team
+          </a>
+
+          <a mat-list-item routerLink="/reports" routerLinkActive="active">
+            <mat-icon>analytics</mat-icon>
+            Reports
+          </a>
+
+          <a mat-list-item routerLink="/settings" routerLinkActive="active">
+            <mat-icon>settings</mat-icon>
+            Settings
+          </a>
+        </nav>
+
+        <!-- Projects section -->
+        <div class="projects-section">
+          <div class="section-header">
+            <h5>PROJECTS</h5>
+            <button mat-icon-button (click)="createNewProject()">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+
+          <!-- ✅ MODIFIÉ - Projets avec badges potentiels -->
+          <a *ngFor="let project of projects"
+            mat-list-item
+            class="project-item"
+            [routerLink]="'/projects/' + project.id"
+            appNotificationBadge
+            [badgeType]="'projects'"
+            [badgeColor]="'accent'"
+            [badgeSize]="'small'"
+            [showZero]="false">
+            <div class="project-icon" [ngClass]="getProjectIcon(project.name)"></div>
+            {{ project.name }}
+          </a>
+
+          <!-- Message si pas de projets -->
+          <div *ngIf="projects.length === 0" class="no-projects">
+            <p>No projects yet</p>
+            <button mat-button (click)="createNewProject()">
+              <mat-icon>add</mat-icon>
+              Create your first project
+            </button>
+          </div>
+        </div>
+      </mat-sidenav>
+
+      <!-- Page content -->
+      <mat-sidenav-content class="page-content">
+        <router-outlet></router-outlet>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+
+  <!-- ✅ NOUVEAU - Centre de notifications -->
+  <app-notification-center #notificationCenter></app-notification-center>
+
+  <!-- ✅ NOUVEAU - Indicateur de statut WebSocket (optionnel) -->
+  <div *ngIf="notificationError" class="notification-error-banner">
+    <div class="error-content">
+      <mat-icon>error_outline</mat-icon>
+      <span>{{ notificationError }}</span>
+      <button mat-button (click)="reconnectWebSocket()">Retry</button>
+    </div>
+  </div>
+</div>

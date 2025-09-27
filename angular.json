@@ -25,25 +25,42 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "@stomp/stompjs",
+              "sockjs-client",
+              "buffer"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
-                }
+                      {
+                        "type": "initial",
+                        "maximumWarning": "2mb",
+                        "maximumError": "5mb"
+                      },
+                      {
+                        "type": "anyComponentStyle",
+                        "maximumWarning": "20kb",
+                        "maximumError": "50kb"
+                      }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+                  "optimization": {
+                  "scripts": true,
+                  "styles": true,
+                  "fonts": false
+                }
+
             },
             "development": {
               "buildOptimizer": false,
@@ -94,5 +111,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "678afc6d-fe7e-49db-9ad5-cd3d711d0f75"
   }
 }

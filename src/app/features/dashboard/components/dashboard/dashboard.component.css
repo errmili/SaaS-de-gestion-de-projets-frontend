@@ -1,0 +1,1100 @@
+/* src/app/features/dashboard/components/dashboard/dashboard.component.css - VERSION AMÉLIORÉE */
+
+.dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header du dashboard */
+.dashboard-header {
+  margin-bottom: 32px;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.title-section h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+.title-section p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ===== NOUVEAUX STYLES - INDICATEURS TEMPS RÉEL ===== */
+
+/* Indicateur de statut WebSocket */
+.realtime-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.realtime-indicator.connected {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.realtime-indicator.disconnected {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.realtime-indicator mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+/* Badge LIVE sur le titre du projet */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f44336;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 12px;
+  animation: livePulse 2s infinite;
+}
+
+.live-badge.small {
+  font-size: 9px;
+  padding: 2px 6px;
+  margin-left: 8px;
+}
+
+.live-badge mat-icon {
+  font-size: 12px;
+  width: 12px;
+  height: 12px;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Bouton notifications dans le header */
+.notification-button-container {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-button {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.notification-button:hover {
+  background: rgba(93, 78, 117, 0.1);
+  transform: scale(1.05);
+}
+
+/* Badge de count dans les titres */
+.notification-count-badge {
+  background: #f44336;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 8px;
+  min-width: 18px;
+  text-align: center;
+  display: inline-block;
+}
+
+/* ===== AMÉLIORATIONS MÉTRIQUES ===== */
+
+/* Métriques */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.metric-card {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Pulse temps réel sur les métriques */
+.realtime-pulse {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 12px;
+  height: 12px;
+  background: #4caf50;
+  border-radius: 50%;
+  animation: realtimePulse 2s infinite;
+}
+
+@keyframes realtimePulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+}
+
+.metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.metric-icon mat-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.total-tasks .metric-icon {
+  background: #2196f3;
+}
+
+.completed .metric-icon {
+  background: #4caf50;
+}
+
+.in-progress .metric-icon {
+  background: #ff9800;
+}
+
+.velocity .metric-icon {
+  background: #9c27b0;
+}
+
+.metric-content {
+  flex: 1;
+}
+
+.metric-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.metric-change {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.metric-change.positive {
+  color: #4caf50;
+}
+
+.metric-change.negative {
+  color: #f44336;
+}
+
+/* ===== AMÉLIORATIONS KANBAN ===== */
+
+/* Kanban Board */
+.kanban-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.kanban-container {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  min-height: 600px;
+  padding-bottom: 16px;
+}
+
+.kanban-column {
+  flex: 0 0 320px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.column-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.column-icon {
+  font-size: 20px;
+}
+
+.column-icon.todo {
+  color: #6c757d;
+}
+
+.column-icon.inprogress {
+  color: #ff9800;
+}
+
+.column-icon.review {
+  color: #2196f3;
+}
+
+.column-icon.done {
+  color: #4caf50;
+}
+
+.column-title {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+.task-count {
+  background: #e9ecef;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6c757d;
+}
+
+.task-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== AMÉLIORATIONS TASK CARDS ===== */
+
+/* Task Cards avec indicateurs temps réel */
+.task-card {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border-left: 4px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: visible;
+}
+
+.task-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ✅ NOUVEAU - États visuels temps réel */
+.task-card.recently-updated {
+  border-left-color: #2196f3;
+  background: linear-gradient(135deg, white 0%, #f3f8ff 100%);
+  animation: taskUpdated 1s ease-out;
+}
+
+.task-card.new-task {
+  border-left-color: #4caf50;
+  background: linear-gradient(135deg, white 0%, #f1f8e9 100%);
+  animation: taskCreated 1s ease-out;
+}
+
+@keyframes taskUpdated {
+  0% {
+    transform: translateX(-10px);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes taskCreated {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Indicateurs visuels sur les tâches */
+.task-indicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  z-index: 5;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.task-indicator.new-indicator {
+  background: #4caf50;
+  animation: bounceIn 0.6s ease-out;
+}
+
+.task-indicator.updated-indicator {
+  background: #2196f3;
+  animation: fadeInScale 0.6s ease-out;
+}
+
+.task-indicator mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0) rotate(180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(0deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInScale {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.task-type {
+  font-size: 11px;
+  font-weight: 600;
+  height: 24px;
+  min-height: 24px;
+}
+
+.task-type.feature {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.task-type.bug {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+.priority-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.priority-icon.high {
+  color: #f44336;
+}
+
+.priority-icon.medium {
+  color: #ff9800;
+}
+
+.priority-icon.low {
+  color: #4caf50;
+}
+
+.task-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  line-height: 1.4;
+}
+
+.task-description {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.task-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-key {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6c757d;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.task-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.due-date {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #6c757d;
+}
+
+.due-date mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.due-date.overdue {
+  color: #f44336;
+}
+
+.completed {
+  font-size: 11px;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.assignee {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #5d4e75;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ===== AMÉLIORATIONS SECTIONS RÉCENTES ===== */
+
+/* Recent tasks avec indicateurs temps réel */
+.recent-tasks-section,
+.my-tasks-section {
+  margin-top: 32px;
+}
+
+.recent-tasks-section h3,
+.my-tasks-section h3 {
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.recent-tasks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.recent-task-card {
+  transition: transform 0.2s;
+  position: relative;
+}
+
+.recent-task-card:hover {
+  transform: translateY(-2px);
+}
+
+.recent-task-card.recently-updated {
+  border-left: 4px solid #2196f3;
+}
+
+.recent-task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.update-pulse {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 8px;
+  height: 8px;
+  background: #2196f3;
+  border-radius: 50%;
+  animation: updatePulse 1.5s infinite;
+}
+
+@keyframes updatePulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+.recent-task-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.assignee-info,
+.update-time {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 4px 0;
+}
+
+/* My tasks avec mini indicateurs */
+.my-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.my-task-card {
+  transition: transform 0.2s;
+  position: relative;
+}
+
+.my-task-card:hover {
+  transform: translateX(4px);
+}
+
+.my-task-card.recently-updated {
+  border-left: 4px solid #2196f3;
+}
+
+.my-task-card.new-task {
+  border-left: 4px solid #4caf50;
+}
+
+.task-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-info h4 {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+.project-name {
+  font-size: 12px;
+  color: #6c757d;
+  margin: 0;
+}
+
+.task-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+/* Mini indicateurs sur mes tâches */
+.mini-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+.mini-indicator.new {
+  background: #4caf50;
+}
+
+.mini-indicator.updated {
+  background: #2196f3;
+}
+
+/* ===== DRAG & DROP AMÉLIORÉ ===== */
+
+/* Drag & Drop Styles */
+.drag-handle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  cursor: grab;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.task-card:hover .drag-handle {
+  opacity: 0.6;
+}
+
+.drag-handle:hover {
+  opacity: 1 !important;
+  background: rgba(0,0,0,0.1);
+}
+
+/* Drag States */
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  transform: rotate(2deg);
+}
+
+.cdk-drag-placeholder {
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  min-height: 100px;
+  margin-bottom: 12px;
+  transition: all 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging .task-card:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Drag Preview */
+.drag-preview {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  border-left: 4px solid #5d4e75;
+}
+
+.task-preview .task-key {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6c757d;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.task-preview h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+/* Drop Zone Indicators */
+.cdk-drop-list-receiving-dragged-item .kanban-column {
+  background: #e3f2fd;
+  border: 2px dashed #2196f3;
+}
+
+.cdk-drop-list-receiving-dragged-item .column-header {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+/* Update Overlay */
+.update-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.update-overlay p {
+  margin-top: 16px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+/* Kanban Actions */
+.kanban-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ===== ÉTATS VIDES ET LOADING ===== */
+
+/* Empty State amélioré */
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  margin: 32px 0;
+}
+
+.empty-state-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 40px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.empty-state-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #5d4e75;
+  margin-bottom: 24px;
+  opacity: 0.7;
+}
+
+.empty-state-content h3 {
+  margin: 0 0 12px 0;
+  color: #2c3e50;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.empty-state-content p {
+  margin: 0 0 24px 0;
+  color: #6c757d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.create-first-project-btn {
+  min-width: 200px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Loading amélioré */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 32px 0;
+}
+
+.loading-container p {
+  margin-top: 16px;
+  color: #6c757d;
+  font-size: 16px;
+}
+
+.empty-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  color: #6c757d;
+}
+
+.empty-column mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+/* Status chips */
+.status-chip {
+  font-size: 11px;
+}
+
+.status-chip.todo { background: #f8f9fa; color: #6c757d; }
+.status-chip.in_progress { background: #fff3e0; color: #ef6c00; }
+.status-chip.in_review { background: #e3f2fd; color: #1976d2; }
+.status-chip.done { background: #e8f5e8; color: #2e7d32; }
+.status-chip.blocked { background: #ffebee; color: #c62828; }
+
+/* Kanban header */
+.kanban-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.kanban-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+/* ===== RESPONSIVE DESIGN AMÉLIORÉ ===== */
+
+@media (max-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kanban-container {
+    flex-direction: column;
+  }
+
+  .kanban-column {
+    flex: none;
+  }
+
+  .header-actions {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .header-actions button {
+    flex: 1;
+    min-width: unset;
+    max-width: 150px;
+  }
+
+  .empty-state-content {
+    margin: 0 16px;
+    padding: 24px 16px;
+  }
+
+  .empty-state-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+  }
+
+  .empty-state-content h3 {
+    font-size: 20px;
+  }
+
+  .create-first-project-btn {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .live-badge {
+    font-size: 8px;
+    padding: 2px 4px;
+    margin-left: 6px;
+  }
+
+  .live-badge mat-icon {
+    font-size: 10px;
+    width: 10px;
+    height: 10px;
+  }
+
+  .task-indicator {
+    width: 20px;
+    height: 20px;
+    top: -6px;
+    right: -6px;
+  }
+
+  .task-indicator mat-icon {
+    font-size: 12px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .mini-indicator {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+  }
+
+  .drag-handle {
+    opacity: 1;
+  }
+
+  .cdk-drag-preview {
+    transform: none;
+  }
+}
+
+/* ===== ACCESSIBILITÉ AMÉLIORÉE ===== */
+
+.task-card:focus-visible {
+  outline: 2px solid #5d4e75;
+  outline-offset: 2px;
+}
+
+.notification-button:focus-visible {
+  outline: 2px solid #5d4e75;
+  outline-offset: 2px;
+}
+
+/* ===== HIGH CONTRAST MODE ===== */
+@media (prefers-contrast: high) {
+  .task-card.recently-updated,
+  .task-card.new-task {
+    border-left-width: 6px;
+  }
+
+  .task-indicator {
+    border: 2px solid white;
+  }
+
+  .live-badge {
+    border: 1px solid white;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  .task-card,
+  .metric-card,
+  .recent-task-card,
+  .my-task-card,
+  .realtime-pulse,
+  .live-badge,
+  .task-indicator,
+  .update-pulse {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .task-card:hover,
+  .metric-card:hover,
+  .recent-task-card:hover,
+  .my-task-card:hover {
+    transform: none !important;
+  }
+
+  /* @keyframes livePulse,
+  @keyframes realtimePulse,
+  @keyframes taskUpdated,
+  @keyframes taskCreated,
+  @keyframes bounceIn,
+  @keyframes fadeInScale,
+  @keyframes updatePulse {
+    from, to {
+      transform: none;
+      opacity: 1;
+    }
+  } */
+}

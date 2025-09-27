@@ -1,0 +1,118 @@
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+  <h2 mat-dialog-title>Create New Project</h2>
+
+  <mat-dialog-content class="dialog-content">
+    <!-- Project Name -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Project Name *</mat-label>
+      <input matInput
+             formControlName="name"
+             placeholder="Enter project name"
+             maxlength="100">
+      <mat-error *ngIf="projectForm.get('name')?.hasError('required')">
+        Project name is required
+      </mat-error>
+      <mat-error *ngIf="projectForm.get('name')?.hasError('minlength')">
+        Project name must be at least 3 characters
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Project Key -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Project Key *</mat-label>
+      <input matInput
+             formControlName="key"
+             placeholder="e.g. PROJ, WEB, API"
+             maxlength="10"
+             style="text-transform: uppercase;">
+      <mat-hint>Short code for your project (max 10 chars)</mat-hint>
+      <mat-error *ngIf="projectForm.get('key')?.hasError('required')">
+        Project key is required
+      </mat-error>
+      <mat-error *ngIf="projectForm.get('key')?.hasError('minlength')">
+        Project key must be at least 2 characters
+      </mat-error>
+      <mat-error *ngIf="projectForm.get('key')?.hasError('pattern')">
+        Only letters and numbers allowed
+      </mat-error>
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput
+                formControlName="description"
+                placeholder="Brief description of the project"
+                rows="3"
+                maxlength="500"></textarea>
+      <mat-hint>Optional project description</mat-hint>
+    </mat-form-field>
+
+    <!-- Priority -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Priority</mat-label>
+      <mat-select formControlName="priority">
+        <mat-option value="LOW">
+          <mat-icon class="priority-icon low">keyboard_arrow_down</mat-icon>
+          Low
+        </mat-option>
+        <mat-option value="MEDIUM">
+          <mat-icon class="priority-icon medium">remove</mat-icon>
+          Medium
+        </mat-option>
+        <mat-option value="HIGH">
+          <mat-icon class="priority-icon high">keyboard_arrow_up</mat-icon>
+          High
+        </mat-option>
+        <mat-option value="CRITICAL">
+          <mat-icon class="priority-icon critical">priority_high</mat-icon>
+          Critical
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Date Range -->
+    <div class="date-range">
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>Start Date</mat-label>
+        <input matInput
+               [matDatepicker]="startPicker"
+               formControlName="startDate"
+               readonly>
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="date-field">
+        <mat-label>End Date</mat-label>
+        <input matInput
+               [matDatepicker]="endPicker"
+               formControlName="endDate"
+               readonly>
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+        <mat-error *ngIf="projectForm.hasError('dateRange')">
+          End date must be after start date
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button
+            type="button"
+            (click)="onCancel()"
+            [disabled]="isCreating">
+      Cancel
+    </button>
+
+    <button mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="projectForm.invalid || isCreating">
+      <mat-icon *ngIf="isCreating" class="spinning">sync</mat-icon>
+      <mat-icon *ngIf="!isCreating">add</mat-icon>
+      {{ isCreating ? 'Creating...' : 'Create Project' }}
+    </button>
+  </mat-dialog-actions>
+</form>

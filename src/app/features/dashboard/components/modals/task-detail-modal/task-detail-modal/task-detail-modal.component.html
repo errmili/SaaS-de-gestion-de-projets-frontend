@@ -1,0 +1,353 @@
+<div class="task-detail-modal">
+  <!-- Modal Header -->
+  <div class="modal-header" mat-dialog-title>
+    <div class="header-info">
+      <div class="task-key-badge">{{ task.taskKey }}</div>
+      <div class="task-title-section">
+        <h2 *ngIf="!isEditing">{{ task.title }}</h2>
+        <mat-form-field *ngIf="isEditing" appearance="outline" class="title-input">
+          <input matInput
+                 formControlName="title"
+                 placeholder="Task title">
+          <mat-error *ngIf="titleControl?.hasError('required')">
+            Title is required
+          </mat-error>
+        </mat-form-field>
+        <div class="project-info">
+          <mat-icon>folder</mat-icon>
+          <span>{{ projectName }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Close Button -->
+      <button mat-icon-button
+              (click)="onClose()"
+              matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Content -->
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="taskForm">
+
+      <!-- Edit Mode Toggle Button -->
+      <div class="edit-toggle-section" *ngIf="!isEditing">
+        <button mat-raised-button
+                color="primary"
+                (click)="toggleEditMode()"
+                class="edit-button">
+          <mat-icon>edit</mat-icon>
+          Edit Task
+        </button>
+      </div>
+
+      <!-- Task Metadata Row -->
+      <div class="metadata-row">
+        <div class="metadata-item">
+          <mat-icon [ngClass]="'task-type-icon ' + (task.taskType || 'task').toLowerCase()">
+            {{ getTaskTypeIcon(task.taskType) }}
+          </mat-icon>
+          <span class="metadata-label">{{ task.taskType || 'Task' }}</span>
+        </div>
+
+        <div class="metadata-item">
+          <mat-icon [ngClass]="'priority-icon ' + (task.priority || 'medium').toLowerCase()">
+            {{ getPriorityIcon(task.priority) }}
+          </mat-icon>
+          <span class="metadata-label">{{ task.priority || 'Medium' }} Priority</span>
+        </div>
+
+        <div class="metadata-item">
+          <mat-icon [ngClass]="'status-icon ' + (task.status || 'todo').toLowerCase()">
+            {{ getStatusIcon(task.status) }}
+          </mat-icon>
+          <span class="metadata-label">{{ task.status || 'To Do' }}</span>
+        </div>
+      </div>
+
+      <!-- Description Section -->
+      <div class="form-section">
+        <h3>Description</h3>
+        <div *ngIf="!isEditing" class="readonly-description">
+          <p *ngIf="task.description">{{ task.description }}</p>
+          <p *ngIf="!task.description" class="no-description">No description provided</p>
+        </div>
+
+        <mat-form-field *ngIf="isEditing" appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput
+                    formControlName="description"
+                    placeholder="Describe what needs to be done"
+                    rows="4"
+                    maxlength="1000"></textarea>
+        </mat-form-field>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="details-grid">
+        <!-- Task Type -->
+        <div class="detail-item">
+          <label>Task Type</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon class="detail-icon">{{ getTaskTypeIcon(task.taskType) }}</mat-icon>
+            {{ task.taskType || 'Task' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-select formControlName="taskType">
+              <mat-option value="TASK">
+                <span class="select-option">
+                  <mat-icon>assignment</mat-icon> Task
+                </span>
+              </mat-option>
+              <mat-option value="BUG">
+                <span class="select-option">
+                  <mat-icon>bug_report</mat-icon> Bug
+                </span>
+              </mat-option>
+              <mat-option value="STORY">
+                <span class="select-option">
+                  <mat-icon>library_books</mat-icon> Story
+                </span>
+              </mat-option>
+              <mat-option value="EPIC">
+                <span class="select-option">
+                  <mat-icon>stars</mat-icon> Epic
+                </span>
+              </mat-option>
+              <mat-option value="SUBTASK">
+                <span class="select-option">
+                  <mat-icon>subdirectory_arrow_right</mat-icon> Subtask
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Priority -->
+        <div class="detail-item">
+          <label>Priority</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon [ngClass]="'priority-icon ' + (task.priority || 'medium').toLowerCase()">
+              {{ getPriorityIcon(task.priority) }}
+            </mat-icon>
+            {{ task.priority || 'Medium' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-select formControlName="priority">
+              <mat-option value="LOW">
+                <span class="select-option">
+                  <mat-icon class="priority-icon low">keyboard_arrow_down</mat-icon> Low
+                </span>
+              </mat-option>
+              <mat-option value="MEDIUM">
+                <span class="select-option">
+                  <mat-icon class="priority-icon medium">remove</mat-icon> Medium
+                </span>
+              </mat-option>
+              <mat-option value="HIGH">
+                <span class="select-option">
+                  <mat-icon class="priority-icon high">keyboard_arrow_up</mat-icon> High
+                </span>
+              </mat-option>
+              <mat-option value="CRITICAL">
+                <span class="select-option">
+                  <mat-icon class="priority-icon critical">priority_high</mat-icon> Critical
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Status -->
+        <div class="detail-item">
+          <label>Status</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon [ngClass]="'status-icon ' + (task.status || 'todo').toLowerCase()">
+              {{ getStatusIcon(task.status) }}
+            </mat-icon>
+            {{ task.status || 'To Do' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-select formControlName="status">
+              <mat-option value="TODO">
+                <span class="select-option">
+                  <mat-icon>radio_button_unchecked</mat-icon> To Do
+                </span>
+              </mat-option>
+              <mat-option value="IN_PROGRESS">
+                <span class="select-option">
+                  <mat-icon>schedule</mat-icon> In Progress
+                </span>
+              </mat-option>
+              <mat-option value="IN_REVIEW">
+                <span class="select-option">
+                  <mat-icon>search</mat-icon> In Review
+                </span>
+              </mat-option>
+              <mat-option value="DONE">
+                <span class="select-option">
+                  <mat-icon>check_circle</mat-icon> Done
+                </span>
+              </mat-option>
+              <mat-option value="BLOCKED">
+                <span class="select-option">
+                  <mat-icon>block</mat-icon> Blocked
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Story Points -->
+        <div class="detail-item">
+          <label>Story Points</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon class="detail-icon">trending_up</mat-icon>
+            {{ task.storyPoints || 'Not estimated' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>Story Points</mat-label>
+            <input matInput
+                   type="number"
+                   formControlName="storyPoints"
+                   placeholder="1-20"
+                   min="1"
+                   max="20">
+          </mat-form-field>
+        </div>
+
+        <!-- Due Date -->
+        <div class="detail-item">
+          <label>Due Date</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon class="detail-icon"
+                     [ngClass]="{ 'overdue': isDueDateOverdue(task.dueDate) }">
+              schedule
+            </mat-icon>
+            <span [ngClass]="{ 'overdue': isDueDateOverdue(task.dueDate) }">
+              {{ formatDueDate(task.dueDate) }}
+            </span>
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>Due Date</mat-label>
+            <input matInput
+                   type="date"
+                   formControlName="dueDate">
+          </mat-form-field>
+        </div>
+
+        <!-- Assignee -->
+        <div class="detail-item">
+          <label>Assignee</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <div *ngIf="task.assigneeName" class="assignee-info">
+              <div class="assignee-avatar">
+                {{ task.assigneeName.charAt(0).toUpperCase() }}
+              </div>
+              <span>{{ task.assigneeName }}</span>
+            </div>
+            <span *ngIf="!task.assigneeName" class="no-assignee">
+              <mat-icon class="detail-icon">person_outline</mat-icon>
+              Unassigned
+            </span>
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>Assignee ID</mat-label>
+            <input matInput
+                   formControlName="assigneeId"
+                   placeholder="User ID">
+            <mat-hint>Enter user ID (user selector coming soon)</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Additional Info Section -->
+      <div class="info-section" *ngIf="!isEditing">
+        <h3>Additional Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Created</label>
+            <span>{{ formatCreatedDate(task.createdAt) }}</span>
+          </div>
+          <div class="info-item" *ngIf="task.updatedAt">
+            <label>Last Updated</label>
+            <span>{{ formatCreatedDate(task.updatedAt) }}</span>
+          </div>
+          <div class="info-item" *ngIf="task.reporterName">
+            <label>Reporter</label>
+            <span>{{ task.reporterName }}</span>
+          </div>
+          <div class="info-item" *ngIf="task.sprintName">
+            <label>Sprint</label>
+            <span>{{ task.sprintName }}</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Modal Actions -->
+  <mat-dialog-actions class="dialog-actions">
+    <!-- Mode Lecture -->
+    <div *ngIf="!isEditing" class="read-mode-actions">
+      <button mat-stroked-button
+              color="warn"
+              (click)="onDelete()"
+              [disabled]="isDeleting"
+              class="delete-btn">
+        <mat-icon *ngIf="isDeleting" class="spinning">sync</mat-icon>
+        <mat-icon *ngIf="!isDeleting">delete</mat-icon>
+        {{ isDeleting ? 'Deleting...' : 'Delete' }}
+      </button>
+
+      <div class="actions-spacer"></div>
+
+      <button mat-button (click)="onClose()">
+        Close
+      </button>
+    </div>
+
+    <!-- Mode Édition -->
+    <div *ngIf="isEditing" class="edit-mode-actions">
+      <button mat-stroked-button
+              color="warn"
+              (click)="onDelete()"
+              [disabled]="isDeleting || isLoading"
+              class="delete-btn">
+        <mat-icon *ngIf="isDeleting" class="spinning">sync</mat-icon>
+        <mat-icon *ngIf="!isDeleting">delete</mat-icon>
+        {{ isDeleting ? 'Deleting...' : 'Delete' }}
+      </button>
+
+      <div class="actions-spacer"></div>
+
+      <button mat-button
+              (click)="toggleEditMode()"
+              [disabled]="isLoading"
+              class="cancel-btn">
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+
+      <button mat-raised-button
+              color="primary"
+              (click)="onSave()"
+              [disabled]="taskForm.invalid || isLoading"
+              class="save-btn">
+        <mat-icon *ngIf="isLoading" class="spinning">sync</mat-icon>
+        <mat-icon *ngIf="!isLoading">save</mat-icon>
+        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading || isDeleting" class="loading-overlay">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>{{ isDeleting ? 'Deleting task...' : 'Saving changes...' }}</p>
+  </div>
+</div>

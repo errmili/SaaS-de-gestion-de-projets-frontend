@@ -1,0 +1,140 @@
+<!-- src/app/shared/components/notification-center/notification-center.component.html - VERSION CORRIGÉE -->
+<div class="notification-center" [@slideIn]="isOpen ? 'open' : 'closed'">
+  <!-- Header -->
+  <div class="notification-header">
+    <div class="header-content">
+      <h3>Notifications</h3>
+      <span class="notification-count" *ngIf="unreadCount > 0">
+        {{ unreadCount }} unread
+      </span>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button
+              (click)="markAllAsRead()"
+              [disabled]="unreadCount === 0"
+              matTooltip="Mark all as read">
+        <mat-icon>done_all</mat-icon>
+      </button>
+      <button mat-icon-button (click)="refresh()" matTooltip="Refresh">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-icon-button (click)="close()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="notification-filters">
+    <!-- ✅ CORRECTION IMPORTANTE - Changer ngModelChange pour recevoir la valeur directement -->
+    <mat-chip-listbox [(ngModel)]="selectedFilter" (ngModelChange)="onFilterChange($event)">
+      <mat-chip-option value="all" [selected]="selectedFilter === 'all'">
+        All
+      </mat-chip-option>
+      <mat-chip-option value="unread" [selected]="selectedFilter === 'unread'">
+        Unread
+      </mat-chip-option>
+      <mat-chip-option value="tasks" [selected]="selectedFilter === 'tasks'">
+        Tasks
+      </mat-chip-option>
+      <mat-chip-option value="projects" [selected]="selectedFilter === 'projects'">
+        Projects
+      </mat-chip-option>
+    </mat-chip-listbox>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="notification-list" *ngIf="!isLoading">
+    <div *ngIf="filteredNotifications.length === 0" class="empty-state">
+      <mat-icon>notifications_none</mat-icon>
+      <p>No notifications yet</p>
+      <small>You'll see notifications here when something happens</small>
+    </div>
+
+    <div *ngFor="let notification of filteredNotifications; trackBy: trackByNotificationId"
+         class="notification-item"
+         [class.unread]="isNotificationUnread(notification)"
+         (click)="onNotificationClick(notification)">
+
+      <!-- Notification Icon -->
+      <div class="notification-icon" [ngClass]="getNotificationIconClass(notification.type)">
+        <mat-icon>{{ getNotificationIcon(notification.type) }}</mat-icon>
+      </div>
+
+      <!-- Notification Content -->
+      <div class="notification-content">
+        <div class="notification-title">{{ notification.title }}</div>
+        <div class="notification-message">{{ notification.message }}</div>
+
+        <!-- Metadata -->
+        <div class="notification-meta">
+          <span class="notification-time">{{ getTimeAgo(notification.createdAt) }}</span>
+          <span *ngIf="notification.projectId" class="notification-project">
+            Project #{{ notification.projectId }}
+          </span>
+          <span *ngIf="notification.taskId" class="notification-task">
+            Task #{{ notification.taskId }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="notification-actions">
+        <button *ngIf="isNotificationUnread(notification)"
+                mat-icon-button
+                (click)="markAsRead(notification, $event)"
+                matTooltip="Mark as read"
+                class="mark-read-btn">
+          <mat-icon>check</mat-icon>
+        </button>
+
+        <button mat-icon-button
+                [matMenuTriggerFor]="notificationMenu"
+                (click)="$event.stopPropagation()"
+                class="menu-btn">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+
+        <mat-menu #notificationMenu="matMenu">
+          <button mat-menu-item
+                  *ngIf="isNotificationUnread(notification)"
+                  (click)="markAsRead(notification)">
+            <mat-icon>check</mat-icon>
+            Mark as read
+          </button>
+          <button mat-menu-item (click)="viewDetails(notification)">
+            <mat-icon>open_in_new</mat-icon>
+            View details
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-menu-item (click)="deleteNotification(notification)">
+            <mat-icon color="warn">delete</mat-icon>
+            Delete
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div *ngIf="hasMoreNotifications" class="load-more">
+      <button mat-stroked-button (click)="loadMore()" [disabled]="isLoadingMore">
+        <mat-icon *ngIf="!isLoadingMore">expand_more</mat-icon>
+        <mat-spinner *ngIf="isLoadingMore" diameter="20"></mat-spinner>
+        {{ isLoadingMore ? 'Loading...' : 'Load More' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading notifications...</p>
+  </div>
+</div>
+
+<!-- Backdrop -->
+<div class="notification-backdrop"
+     *ngIf="isOpen"
+     (click)="close()"
+     [@fadeIn]="isOpen ? 'open' : 'closed'">
+</div>

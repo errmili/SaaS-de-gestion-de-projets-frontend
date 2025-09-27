@@ -1,0 +1,227 @@
+.dialog-content {
+  min-width: 500px;
+  max-width: 600px;
+  padding: 20px 24px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  flex: 1;
+}
+
+.dialog-actions {
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+  margin: 0;
+}
+
+/* Task Type Options */
+.task-type-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-type-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.task-type-icon.task {
+  color: #2196f3;
+}
+
+.task-type-icon.bug {
+  color: #f44336;
+}
+
+.task-type-icon.story {
+  color: #4caf50;
+}
+
+.task-type-icon.epic {
+  color: #9c27b0;
+}
+
+.task-type-icon.subtask {
+  color: #ff9800;
+}
+
+/* Priority Options */
+.priority-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priority-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.priority-icon.low {
+  color: #4caf50;
+}
+
+.priority-icon.medium {
+  color: #ff9800;
+}
+
+.priority-icon.high {
+  color: #f44336;
+}
+
+.priority-icon.critical {
+  color: #d32f2f;
+}
+
+/* Status Options */
+.status-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+}
+
+.status-icon.todo {
+  color: #6c757d;
+}
+
+.status-icon.in_progress {
+  color: #ff9800;
+}
+
+.status-icon.in_review {
+  color: #2196f3;
+}
+
+.status-icon.done {
+  color: #4caf50;
+}
+
+.status-icon.blocked {
+  color: #f44336;
+}
+
+/* Spinning animation for loading */
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Form styling */
+h2[mat-dialog-title] {
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Button styling */
+button[mat-raised-button] {
+  min-width: 120px;
+}
+
+/* Success/Error Snackbar Styles */
+::ng-deep .success-snackbar {
+  background: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .error-snackbar {
+  background: #f44336 !important;
+  color: white !important;
+}
+
+/* Enhanced form field styling */
+.mat-mdc-form-field {
+  font-family: inherit;
+}
+
+/* Textarea specific styling */
+textarea.mat-mdc-input-element {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Date input styling */
+input[type="date"] {
+  font-family: inherit;
+}
+
+/* Number input styling */
+input[type="number"] {
+  font-family: inherit;
+}
+
+/* Disabled field styling */
+.mat-mdc-form-field.mat-form-field-disabled .mat-mdc-text-field-wrapper {
+  background-color: #f5f5f5;
+}
+
+.mat-mdc-form-field.mat-form-field-disabled .mat-mdc-form-field-label {
+  color: #666;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .dialog-content {
+    min-width: unset;
+    width: 90vw;
+    max-width: 400px;
+    padding: 16px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .half-width {
+    width: 100%;
+  }
+}
+
+/* Enhanced visual feedback */
+.mat-mdc-form-field:not(.mat-form-field-disabled):hover {
+  .mdc-notched-outline .mdc-notched-outline__leading,
+  .mdc-notched-outline .mdc-notched-outline__notch,
+  .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: #5d4e75;
+  }
+}
+
+/* Focus states */
+.mat-mdc-form-field.mat-focused {
+  .mdc-notched-outline .mdc-notched-outline__leading,
+  .mdc-notched-outline .mdc-notched-outline__notch,
+  .mdc-notched-outline .mdc-notched-outline__trailing {
+    border-color: #5d4e75 !important;
+    border-width: 2px !important;
+  }
+}

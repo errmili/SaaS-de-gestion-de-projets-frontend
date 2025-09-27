@@ -2,12 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>ProjecthubFrontend</title>
+  <title>ProjectHub</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- ✅ AJOUTER : Google Fonts pour Roboto -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <!-- ✅ AJOUTER : Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- ✅ POLYFILLS STOMP/SOCKJS - AVANT TOUT LE RESTE -->
+  <script>
+    // Polyfills globaux pour STOMP/SockJS
+    window.global = window;
+    window.process = {
+      env: { DEBUG: undefined },
+      version: '',
+      nextTick: function(fn) { setTimeout(fn, 0); },
+      browser: true
+    };
+
+    // Buffer polyfill
+    if (!window.Buffer) {
+      window.Buffer = {
+        isBuffer: function() { return false; },
+        from: function(str) { return str; },
+        alloc: function(size) { return new Array(size).fill(0); },
+        allocUnsafe: function(size) { return new Array(size).fill(0); }
+      };
+    }
+
+    // Module polyfill
+    if (!window.module) {
+      window.module = { exports: {} };
+    }
+
+    // Require polyfill
+    if (!window.require) {
+      window.require = function() {
+        return {};
+      };
+    }
+
+    console.log('🔧 STOMP Polyfills loaded successfully');
+  </script>
 </head>
-<body>
+<body class="mat-typography">
   <app-root></app-root>
 </body>
 </html>

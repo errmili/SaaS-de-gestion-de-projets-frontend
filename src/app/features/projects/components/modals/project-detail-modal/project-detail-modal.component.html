@@ -1,0 +1,345 @@
+<div class="project-detail-modal">
+  <!-- Modal Header -->
+  <div class="modal-header" mat-dialog-title>
+    <div class="header-info">
+      <div class="project-key-badge">{{ project.key }}</div>
+      <div class="project-title-section">
+        <h2 *ngIf="!isEditing">{{ project.name }}</h2>
+        <mat-form-field *ngIf="isEditing" appearance="outline" class="title-input">
+          <input matInput
+                 formControlName="name"
+                 placeholder="Project name">
+          <mat-error *ngIf="nameControl?.hasError('required')">
+            Project name is required
+          </mat-error>
+          <mat-error *ngIf="nameControl?.hasError('minlength')">
+            Project name must be at least 3 characters
+          </mat-error>
+        </mat-form-field>
+        <div class="project-meta">
+          <mat-icon>folder</mat-icon>
+          <span>{{ project.taskCount || 0 }} tasks • {{ project.memberCount || 0 }} members</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Close Button -->
+      <button mat-icon-button
+              (click)="onClose()"
+              matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Content -->
+  <mat-dialog-content class="dialog-content">
+    <form [formGroup]="projectForm">
+
+      <!-- Edit Mode Toggle Button -->
+      <div class="edit-toggle-section" *ngIf="!isEditing">
+        <button mat-raised-button
+                color="primary"
+                (click)="toggleEditMode()"
+                class="edit-button">
+          <mat-icon>edit</mat-icon>
+          Edit Project
+        </button>
+      </div>
+
+      <!-- Project Metadata Row -->
+      <div class="metadata-row">
+        <div class="metadata-item">
+          <mat-icon [ngClass]="'status-icon ' + (project.status || 'active').toLowerCase()">
+            {{ getStatusIcon(project.status) }}
+          </mat-icon>
+          <span class="metadata-label">{{ project.status || 'Active' }}</span>
+        </div>
+
+        <div class="metadata-item">
+          <mat-icon [ngClass]="'priority-icon ' + (project.priority || 'medium').toLowerCase()">
+            {{ getPriorityIcon(project.priority) }}
+          </mat-icon>
+          <span class="metadata-label">{{ project.priority || 'Medium' }} Priority</span>
+        </div>
+
+        <div class="metadata-item" *ngIf="project.createdAt">
+          <mat-icon>calendar_today</mat-icon>
+          <span class="metadata-label">Created {{ formatDisplayDate(project.createdAt) | date:'mediumDate' }}</span>
+        </div>
+      </div>
+
+      <!-- Description Section -->
+      <div class="form-section">
+        <h3>Description</h3>
+        <div *ngIf="!isEditing" class="readonly-description">
+          <p *ngIf="project.description">{{ project.description }}</p>
+          <p *ngIf="!project.description" class="no-description">No description provided</p>
+        </div>
+
+        <mat-form-field *ngIf="isEditing" appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput
+                    formControlName="description"
+                    placeholder="Describe the project goals and scope"
+                    rows="4"
+                    maxlength="500"></textarea>
+          <mat-hint>{{ descriptionControl?.value?.length || 0 }}/500 characters</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- Details Grid -->
+      <div class="details-grid">
+        <!-- Priority -->
+        <div class="detail-item">
+          <label>Priority</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon [ngClass]="'priority-icon ' + (project.priority || 'medium').toLowerCase()">
+              {{ getPriorityIcon(project.priority) }}
+            </mat-icon>
+            {{ project.priority || 'Medium' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>Priority</mat-label>
+            <mat-select formControlName="priority">
+              <mat-option value="LOW">
+                <span class="select-option">
+                  <mat-icon class="priority-icon low">keyboard_arrow_down</mat-icon> Low
+                </span>
+              </mat-option>
+              <mat-option value="MEDIUM">
+                <span class="select-option">
+                  <mat-icon class="priority-icon medium">remove</mat-icon> Medium
+                </span>
+              </mat-option>
+              <mat-option value="HIGH">
+                <span class="select-option">
+                  <mat-icon class="priority-icon high">keyboard_arrow_up</mat-icon> High
+                </span>
+              </mat-option>
+              <mat-option value="CRITICAL">
+                <span class="select-option">
+                  <mat-icon class="priority-icon critical">priority_high</mat-icon> Critical
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Status -->
+        <div class="detail-item">
+          <label>Status</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon [ngClass]="'status-icon ' + (project.status || 'active').toLowerCase()">
+              {{ getStatusIcon(project.status) }}
+            </mat-icon>
+            {{ project.status || 'Active' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="ACTIVE">
+                <span class="select-option">
+                  <mat-icon>play_circle</mat-icon> Active
+                </span>
+              </mat-option>
+              <mat-option value="COMPLETED">
+                <span class="select-option">
+                  <mat-icon>check_circle</mat-icon> Completed
+                </span>
+              </mat-option>
+              <mat-option value="ON_HOLD">
+                <span class="select-option">
+                  <mat-icon>pause_circle</mat-icon> On Hold
+                </span>
+              </mat-option>
+              <mat-option value="ARCHIVED">
+                <span class="select-option">
+                  <mat-icon>archive</mat-icon> Archived
+                </span>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Start Date -->
+        <div class="detail-item">
+          <label>Start Date</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon class="detail-icon">event</mat-icon>
+            {{ project.startDate ? (project.startDate | date:'mediumDate') : 'Not set' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>Start Date</mat-label>
+            <input matInput
+                   type="date"
+                   formControlName="startDate">
+          </mat-form-field>
+        </div>
+
+        <!-- End Date -->
+        <div class="detail-item">
+          <label>End Date</label>
+          <div *ngIf="!isEditing" class="readonly-value">
+            <mat-icon class="detail-icon">event_available</mat-icon>
+            {{ project.endDate ? (project.endDate | date:'mediumDate') : 'Not set' }}
+          </div>
+          <mat-form-field *ngIf="isEditing" appearance="outline">
+            <mat-label>End Date</mat-label>
+            <input matInput
+                   type="date"
+                   formControlName="endDate">
+            <mat-error *ngIf="projectForm.hasError('dateRange')">
+              End date must be after start date
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Duration -->
+        <div class="detail-item" *ngIf="project.startDate || project.endDate">
+          <label>Duration</label>
+          <div class="readonly-value">
+            <mat-icon class="detail-icon">schedule</mat-icon>
+            {{ calculateDuration() }}
+          </div>
+        </div>
+
+        <!-- Created By -->
+        <div class="detail-item" *ngIf="project.createdBy">
+          <label>Created By</label>
+          <div class="readonly-value">
+            <mat-icon class="detail-icon">person</mat-icon>
+            {{ project.createdBy }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Section -->
+      <div class="stats-section" *ngIf="!isEditing">
+        <h3>Project Statistics</h3>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-icon tasks">
+              <mat-icon>assignment</mat-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ project.taskCount || 0 }}</div>
+              <div class="stat-label">Total Tasks</div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon members">
+              <mat-icon>people</mat-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ project.memberCount || 0 }}</div>
+              <div class="stat-label">Team Members</div>
+            </div>
+          </div>
+
+          <div class="stat-item" *ngIf="project.createdAt">
+            <div class="stat-icon duration">
+              <mat-icon>schedule</mat-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ calculateDaysActive() }}</div>
+              <div class="stat-label">Days Active</div>
+            </div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon updated">
+              <mat-icon>update</mat-icon>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ project.updatedAt ? (project.updatedAt | date:'shortDate') : 'N/A' }}</div>
+              <div class="stat-label">Last Updated</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Info Section -->
+      <div class="info-section" *ngIf="!isEditing">
+        <h3>Additional Information</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Project ID</label>
+            <span class="project-id">{{ project.id }}</span>
+          </div>
+          <div class="info-item" *ngIf="project.createdAt">
+            <label>Created</label>
+            <span>{{ formatDisplayDate(project.createdAt) }}</span>
+          </div>
+          <div class="info-item" *ngIf="project.updatedAt">
+            <label>Last Updated</label>
+            <span>{{ formatDisplayDate(project.updatedAt) }}</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+
+  <!-- Modal Actions -->
+  <mat-dialog-actions class="dialog-actions">
+    <!-- Mode Lecture -->
+    <div *ngIf="!isEditing" class="read-mode-actions">
+      <button mat-stroked-button
+              color="warn"
+              (click)="onDelete()"
+              [disabled]="isDeleting"
+              class="delete-btn">
+        <mat-icon *ngIf="isDeleting" class="spinning">sync</mat-icon>
+        <mat-icon *ngIf="!isDeleting">delete</mat-icon>
+        {{ isDeleting ? 'Deleting...' : 'Delete Project' }}
+      </button>
+
+      <div class="actions-spacer"></div>
+
+      <button mat-button (click)="onClose()">
+        Close
+      </button>
+    </div>
+
+    <!-- Mode Édition -->
+    <div *ngIf="isEditing" class="edit-mode-actions">
+      <button mat-stroked-button
+              color="warn"
+              (click)="onDelete()"
+              [disabled]="isDeleting || isLoading"
+              class="delete-btn">
+        <mat-icon *ngIf="isDeleting" class="spinning">sync</mat-icon>
+        <mat-icon *ngIf="!isDeleting">delete</mat-icon>
+        {{ isDeleting ? 'Deleting...' : 'Delete' }}
+      </button>
+
+      <div class="actions-spacer"></div>
+
+      <button mat-button
+              (click)="toggleEditMode()"
+              [disabled]="isLoading"
+              class="cancel-btn">
+        <mat-icon>cancel</mat-icon>
+        Cancel
+      </button>
+
+      <button mat-raised-button
+              color="primary"
+              (click)="onSave()"
+              [disabled]="projectForm.invalid || isLoading"
+              class="save-btn">
+        <mat-icon *ngIf="isLoading" class="spinning">sync</mat-icon>
+        <mat-icon *ngIf="!isLoading">save</mat-icon>
+        {{ isLoading ? 'Saving...' : 'Save Changes' }}
+      </button>
+    </div>
+  </mat-dialog-actions>
+
+  <!-- Loading Overlay -->
+  <div *ngIf="isLoading || isDeleting" class="loading-overlay">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>{{ isDeleting ? 'Deleting project...' : 'Saving changes...' }}</p>
+  </div>
+</div>
