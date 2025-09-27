@@ -250,7 +250,7 @@ jobs:
           echo "🐳 Docker image: ${{ env.DOCKER_IMAGE_NAME }}:${{ github.sha }}"
           echo "📦 Build artifacts available"
         else
-          echo "❌ Some checks failed:"
+          echo "❌❌❌ Some checks failed: "
           echo "- Tests & Build: ${{ needs.test-and-build.result }}"
           echo "- Security: ${{ needs.security-audit.result }}"
           echo "- Docker: ${{ needs.docker-build-test.result }}"
