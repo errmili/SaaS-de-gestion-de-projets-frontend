@@ -3,20 +3,18 @@ FROM node:18-alpine AS build
 
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci || npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build:prod
 
-# Stage 2: Nginx pour Railway
+# Stage 2: Nginx pour Render
 FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist/projecthub-frontend /usr/share/nginx/html
 
-# Railway utilise PORT dynamique
-EXPOSE $PORT
-CMD ["sh", "-c", "sed -i 's/listen 80/listen $PORT/g' /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
-
+EXPOSE 10000
+CMD ["nginx", "-g", "daemon off;"]
 
 
 # # Multi-stage build
