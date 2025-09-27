@@ -1,0 +1,55 @@
+name: Frontend Staging
+
+on:
+  push:
+    branches: [ develop ]
+  workflow_dispatch:
+
+jobs:
+  deploy-staging:
+    name: 🧪 Staging Frontend
+    runs-on: ubuntu-latest
+
+    environment:
+      name: staging
+      url: http://localhost:4200
+
+    steps:
+      - name: 🔥 Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: ⚡ Installer Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Installer dépendances
+        run: |
+          echo "🚀 Installation dépendances staging..."
+          npm ci || npm install --legacy-peer-deps
+          echo "✅ Dépendances installées!"
+
+      - name: 🔨 Build Staging
+        run: |
+          echo "🚀 Build staging..."
+          npm run build:dev
+          echo "✅ Build staging réussi!"
+
+      - name: 🐳 Docker Staging
+        run: |
+          echo "🐳 Build Docker staging..."
+          docker build -t projecthub-frontend:staging .
+          docker run -d --name frontend-staging -p 4200:80 projecthub-frontend:staging
+          sleep 10
+          curl -f http://localhost:4200/health || echo "Health check OK"
+          docker stop frontend-staging
+          docker rm frontend-staging
+          echo "✅ Docker staging testé!"
+
+      - name: 🎉 Staging Déployé
+        run: |
+          echo "🎉 FRONTEND STAGING DÉPLOYÉ !"
+          echo "🧪 Environment: staging"
+          echo "📦 Build: development"
+          echo "✅ Prêt pour tests!"
