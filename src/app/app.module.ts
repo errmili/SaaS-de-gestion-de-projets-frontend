@@ -19,6 +19,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './shared/material.module';
 import { SharedModule } from './shared/shared/shared.module';
+import { AuthApiConfigModule } from './core/api-modules/auth-api/auth-api.module';
 // import { SharedModule } from './shared/shared.module'; // ✅ CORRECTION - Chemin corrigé
 
 @NgModule({
@@ -29,6 +30,7 @@ import { SharedModule } from './shared/shared/shared.module';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
+    AuthApiConfigModule,
     AppRoutingModule,
     MaterialModule,
     LayoutModule,
