@@ -35,6 +35,10 @@ const routes: Routes = [
         loadChildren: () => import('./features/projects/projects.module').then(m => m.ProjectsModule)
       },
       {
+        path: 'files', // ✅ AJOUTER
+        loadChildren: () => import('./features/files/files.module').then(m => m.FilesModule)
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

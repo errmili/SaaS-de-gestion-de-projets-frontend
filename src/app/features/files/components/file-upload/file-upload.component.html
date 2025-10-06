@@ -1,0 +1,72 @@
+<div class="file-upload-container">
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>Upload File</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Drop Zone -->
+      <div class="drop-zone"
+           [class.dragging]="isDragging"
+           [class.has-file]="selectedFile"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)"
+           (click)="fileInput.click()">
+
+        <input #fileInput
+               type="file"
+               class="file-input"
+               (change)="onFileSelected($event)"
+               [disabled]="isUploading">
+
+        <div *ngIf="!selectedFile" class="drop-zone-content">
+          <mat-icon class="upload-icon">cloud_upload</mat-icon>
+          <p class="drop-text">Drag and drop a file here</p>
+          <p class="or-text">or</p>
+          <button mat-raised-button color="primary" type="button">
+            <mat-icon>folder_open</mat-icon>
+            Browse Files
+          </button>
+        </div>
+
+        <div *ngIf="selectedFile && !isUploading" class="selected-file">
+          <mat-icon class="file-icon">{{ getFileIcon(selectedFile.name) }}</mat-icon>
+          <div class="file-info">
+            <p class="file-name">{{ selectedFile.name }}</p>
+            <p class="file-size">{{ formatFileSize(selectedFile.size) }}</p>
+          </div>
+          <button mat-icon-button
+                  (click)="cancelUpload(); $event.stopPropagation()"
+                  matTooltip="Remove">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <div *ngIf="isUploading" class="uploading-state">
+          <mat-icon class="file-icon">{{ getFileIcon(selectedFile!.name) }}</mat-icon>
+          <div class="upload-info">
+            <p class="file-name">{{ selectedFile!.name }}</p>
+            <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+            <p class="upload-progress">{{ uploadProgress }}% complete</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Button -->
+      <div class="upload-actions" *ngIf="selectedFile && !isUploading">
+        <button mat-stroked-button (click)="cancelUpload()">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+        <button mat-raised-button
+                color="primary"
+                (click)="uploadFile()"
+                [disabled]="isUploading">
+          <mat-icon>cloud_upload</mat-icon>
+          Upload File
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

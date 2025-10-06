@@ -1,0 +1,141 @@
+<div class="files-page-container">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>File Management</h1>
+      <p>Upload and manage your files ({{ totalFiles }} total)</p>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button
+              (click)="refreshFiles()"
+              matTooltip="Refresh"
+              [disabled]="isLoading">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Upload Section -->
+  <div class="upload-section">
+    <app-file-upload (fileUploaded)="onFileUploaded($event)"></app-file-upload>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="filters-section">
+    <mat-card class="filters-card">
+      <div class="filters-content">
+        <!-- Search -->
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-icon matPrefix>search</mat-icon>
+          <input matInput
+                 placeholder="Search files..."
+                 [(ngModel)]="searchQuery"
+                 (keyup.enter)="onSearch()">
+          <button mat-icon-button
+                  matSuffix
+                  *ngIf="searchQuery"
+                  (click)="clearSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <!-- File Type Filter -->
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>File Type</mat-label>
+          <mat-select [(ngModel)]="selectedFileType"
+                      (selectionChange)="onFileTypeChange()">
+            <mat-option *ngFor="let type of fileTypes" [value]="type.value">
+              {{ type.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Sort By -->
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Sort By</mat-label>
+          <mat-select [(ngModel)]="sortBy"
+                      (selectionChange)="onSortChange()">
+            <mat-option value="uploadedAt">Upload Date</mat-option>
+            <mat-option value="originalName">Name</mat-option>
+            <mat-option value="fileSize">Size</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Sort Direction -->
+        <button mat-icon-button
+                (click)="toggleSortDirection()"
+                [matTooltip]="sortDir === 'asc' ? 'Ascending' : 'Descending'">
+          <mat-icon>{{ sortDir === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+        </button>
+
+        <!-- Search Button -->
+        <button mat-raised-button
+                color="primary"
+                (click)="onSearch()"
+                [disabled]="isLoading">
+          <mat-icon>search</mat-icon>
+          Search
+        </button>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading files...</p>
+  </div>
+
+  <!-- Files List Section -->
+  <div class="files-list-section" *ngIf="!isLoading">
+    <app-file-list
+      [files]="uploadedFiles"
+      (fileDeleted)="onFileDeleted($event)">
+    </app-file-list>
+
+    <!-- Pagination -->
+    <div class="pagination-container" *ngIf="totalPages > 1">
+      <div class="pagination-info">
+        Showing {{ currentPage * pageSize + 1 }} -
+        {{ Math.min((currentPage + 1) * pageSize, totalFiles) }}
+        of {{ totalFiles }} files
+      </div>
+
+      <div class="pagination-controls">
+        <button mat-icon-button
+                (click)="previousPage()"
+                [disabled]="currentPage === 0 || isLoading"
+                matTooltip="Previous page">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+
+        <button *ngFor="let page of getPageNumbers()"
+                mat-button
+                [class.active]="page === currentPage"
+                (click)="goToPage(page)"
+                [disabled]="isLoading">
+          {{ page + 1 }}
+        </button>
+
+        <button mat-icon-button
+                (click)="nextPage()"
+                [disabled]="currentPage >= totalPages - 1 || isLoading"
+                matTooltip="Next page">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+
+      <div class="pagination-size">
+        <mat-form-field appearance="outline">
+          <mat-label>Per page</mat-label>
+          <mat-select [(ngModel)]="pageSize"
+                      (selectionChange)="onSortChange()">
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            <mat-option [value]="50">50</mat-option>
+            <mat-option [value]="100">100</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+</div>

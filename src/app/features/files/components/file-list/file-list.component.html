@@ -1,0 +1,40 @@
+<div class="file-list-container">
+  <h2>Uploaded Files ({{ files.length }})</h2>
+
+  <div *ngIf="files.length === 0" class="empty-state">
+    <mat-icon>folder_open</mat-icon>
+    <p>No files uploaded yet</p>
+  </div>
+
+  <div *ngIf="files.length > 0" class="files-grid">
+    <mat-card *ngFor="let file of files" class="file-card">
+      <div class="file-card-header">
+        <mat-icon class="file-icon">{{ getFileIcon(file) }}</mat-icon>
+        <div class="file-actions">
+          <button mat-icon-button
+                  (click)="downloadFile(file)"
+                  matTooltip="Download">
+            <mat-icon>download</mat-icon>
+          </button>
+          <button mat-icon-button
+                  color="warn"
+                  (click)="deleteFile(file)"
+                  matTooltip="Delete">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <mat-card-content>
+        <p class="file-name" [matTooltip]="file.originalName || ''">
+          {{ file.originalName }}
+        </p>
+        <div class="file-metadata">
+          <span class="file-size">{{ file.humanReadableSize }}</span>
+          <span class="file-type">{{ file.extension?.toUpperCase() }}</span>
+        </div>
+        <p class="file-date">{{ formatDate(file.uploadedAt) }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
