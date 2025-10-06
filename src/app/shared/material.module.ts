@@ -34,6 +34,7 @@ import { MatDividerModule } from '@angular/material/divider';
 // CDK
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 // ✅ SUPPRIMÉ - Import étrange du NotificationCenterComponent
 
@@ -74,6 +75,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     ScrollingModule
   ],
   // ✅ VIDE - Les déclarations doivent être dans SharedModule
-  declarations: []
+  declarations: [
+    // ConfirmDialogComponent
+  ]
 })
 export class MaterialModule { }
