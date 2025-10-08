@@ -19,8 +19,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './shared/material.module';
 import { SharedModule } from './shared/shared/shared.module';
-import { AuthApiConfigModule } from './core/api-modules/auth-api/auth-api.module';
-
+import { FileApiConfigModule } from './core/api-modules/file-api/file-api.module';
 // import { SharedModule } from './shared/shared.module'; // ✅ CORRECTION - Chemin corrigé
 
 @NgModule({
@@ -31,7 +30,7 @@ import { AuthApiConfigModule } from './core/api-modules/auth-api/auth-api.module
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    AuthApiConfigModule,
+    FileApiConfigModule,
     AppRoutingModule,
     MaterialModule,
     LayoutModule,
