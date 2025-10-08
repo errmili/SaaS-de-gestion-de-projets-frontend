@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  authApiUrl: 'https://auth.projecthub.com',
-  projectApiUrl: 'https://projects.projecthub.com',
-  fileApiUrl: 'https://files.projecthub.com'
+  authApiUrl: 'https://saas-de-gestion-de-projets-type-jira.onrender.com',
+  projectApiUrl: 'https://saas-de-gestion-de-projets-type-jira.onrender.com',
+  fileApiUrl: 'https://saas-de-gestion-de-projets-type-jira.onrender.com'
 };

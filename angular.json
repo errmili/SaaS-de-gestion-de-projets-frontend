@@ -42,25 +42,30 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
-                      {
-                        "type": "initial",
-                        "maximumWarning": "2mb",
-                        "maximumError": "5mb"
-                      },
-                      {
-                        "type": "anyComponentStyle",
-                        "maximumWarning": "20kb",
-                        "maximumError": "50kb"
-                      }
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "20kb",
+                  "maximumError": "50kb"
+                }
               ],
               "outputHashing": "all",
-                  "optimization": {
-                  "scripts": true,
-                  "styles": true,
-                  "fonts": false
-                }
-
+              "optimization": {
+                "scripts": true,
+                "styles": true,
+                "fonts": false
+              }
             },
             "development": {
               "buildOptimizer": false,
