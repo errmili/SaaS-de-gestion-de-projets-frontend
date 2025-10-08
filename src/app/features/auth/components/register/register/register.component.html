@@ -1,42 +1,52 @@
-<!-- src/app/features/auth/components/register/register.component.html -->
 <div class="register-container">
-  <mat-card class="register-card">
-    <mat-card-header>
-      <mat-card-title>
-        <div class="logo">
-          <mat-icon>assignment</mat-icon>
-          ProjectHub
-        </div>
-      </mat-card-title>
-      <mat-card-subtitle>Create your workspace</mat-card-subtitle>
-    </mat-card-header>
+  <!-- ===== LEFT SIDE - FORM ===== -->
+  <div class="register-form-section">
+    <div class="form-wrapper">
+      <!-- Logo -->
+      <div class="logo">
+        <mat-icon>assignment</mat-icon>
+        <span>ProjectHub</span>
+      </div>
 
-    <mat-card-content>
+      <!-- Header -->
+      <div class="form-header">
+        <h2>Create your workspace</h2>
+        <p>Get started with ProjectHub in just a few steps</p>
+      </div>
+
+      <!-- Form -->
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-        <!-- Nom et prénom -->
-        <div style="display: flex; gap: 16px;">
-          <mat-form-field appearance="outline" style="flex: 1;">
+        <!-- Name Fields -->
+        <div class="name-row">
+          <mat-form-field appearance="outline">
             <mat-label>First Name</mat-label>
-            <input matInput formControlName="firstName" placeholder="John">
+            <input matInput
+                   formControlName="firstName"
+                   placeholder="John">
             <mat-icon matSuffix>person</mat-icon>
             <mat-error *ngIf="registerForm.get('firstName')?.hasError('required')">
               First name is required
             </mat-error>
           </mat-form-field>
 
-          <mat-form-field appearance="outline" style="flex: 1;">
+          <mat-form-field appearance="outline">
             <mat-label>Last Name</mat-label>
-            <input matInput formControlName="lastName" placeholder="Doe">
+            <input matInput
+                   formControlName="lastName"
+                   placeholder="Doe">
             <mat-error *ngIf="registerForm.get('lastName')?.hasError('required')">
               Last name is required
             </mat-error>
           </mat-form-field>
         </div>
 
-        <!-- Email -->
+        <!-- Email Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="john@company.com">
+          <input matInput
+                 type="email"
+                 formControlName="email"
+                 placeholder="john@company.com">
           <mat-icon matSuffix>email</mat-icon>
           <mat-error *ngIf="registerForm.get('email')?.hasError('required')">
             Email is required
@@ -46,20 +56,24 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Nom d'entreprise -->
+        <!-- Company Name Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Company Name</mat-label>
-          <input matInput formControlName="tenantName" placeholder="My Company">
+          <input matInput
+                 formControlName="tenantName"
+                 placeholder="My Company">
           <mat-icon matSuffix>business</mat-icon>
           <mat-error *ngIf="registerForm.get('tenantName')?.hasError('required')">
             Company name is required
           </mat-error>
         </mat-form-field>
 
-        <!-- Subdomain -->
+        <!-- Subdomain Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Subdomain</mat-label>
-          <input matInput formControlName="tenantSubdomain" placeholder="my-company">
+          <input matInput
+                 formControlName="tenantSubdomain"
+                 placeholder="my-company">
           <mat-hint>.projecthub.com</mat-hint>
           <mat-error *ngIf="registerForm.get('tenantSubdomain')?.hasError('required')">
             Subdomain is required
@@ -69,15 +83,17 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Password -->
+        <!-- Password Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
           <input matInput
                  [type]="hidePassword ? 'password' : 'text'"
                  formControlName="password">
-          <button mat-icon-button matSuffix
+          <button mat-icon-button
+                  matSuffix
                   (click)="hidePassword = !hidePassword"
-                  type="button">
+                  type="button"
+                  [attr.aria-label]="'Hide password'">
             <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
           <mat-error *ngIf="registerForm.get('password')?.hasError('required')">
@@ -88,15 +104,17 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Confirm Password -->
+        <!-- Confirm Password Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Confirm Password</mat-label>
           <input matInput
                  [type]="hideConfirmPassword ? 'password' : 'text'"
                  formControlName="confirmPassword">
-          <button mat-icon-button matSuffix
+          <button mat-icon-button
+                  matSuffix
                   (click)="hideConfirmPassword = !hideConfirmPassword"
-                  type="button">
+                  type="button"
+                  [attr.aria-label]="'Hide password'">
             <mat-icon>{{ hideConfirmPassword ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
           <mat-error *ngIf="registerForm.get('confirmPassword')?.hasError('required')">
@@ -107,20 +125,62 @@
           </mat-error>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit"
+        <!-- Submit Button -->
+        <button mat-raised-button
+                color="primary"
+                type="submit"
                 class="full-width login-button"
                 [disabled]="!registerForm.valid || isLoading">
           <mat-icon *ngIf="isLoading" class="spinning">refresh</mat-icon>
           {{ isLoading ? 'Creating Account...' : 'Create Account' }}
         </button>
       </form>
-    </mat-card-content>
 
-    <mat-card-actions>
-      <div class="login-link">
-        Already have an account?
-        <a routerLink="/auth/login">Sign in</a>
+      <!-- Footer -->
+      <div class="form-footer">
+        <div class="login-link">
+          Already have an account?
+          <a routerLink="/auth/login">Sign in</a>
+        </div>
       </div>
-    </mat-card-actions>
-  </mat-card>
+    </div>
+  </div>
+
+  <!-- ===== RIGHT SIDE - VISUAL ===== -->
+  <div class="register-visual">
+    <div class="visual-content">
+      <div class="visual-icon">
+        <mat-icon>rocket_launch</mat-icon>
+      </div>
+
+      <h1>Start Your Journey</h1>
+      <p>Join thousands of teams already using ProjectHub to streamline their workflow</p>
+
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3>Create Account</h3>
+            <p>Set up your workspace in seconds</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3>Invite Your Team</h3>
+            <p>Collaborate with your colleagues</p>
+          </div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3>Start Building</h3>
+            <p>Track projects and boost productivity</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

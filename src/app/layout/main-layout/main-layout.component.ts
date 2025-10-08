@@ -1,8 +1,8 @@
 // src/app/layout/main-layout/main-layout.component.ts - VERSION MISE À JOUR
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, takeUntil } from 'rxjs/operators';
 
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Router } from '@angular/router';
@@ -13,6 +13,9 @@ import { ProjectControllerService } from '../../services/projects/services/proje
 import { NotificationService } from '../../core/services/notification.service';
 import { WebSocketService } from '../../core/services/websocket.service';
 import { NotificationCenterComponent } from '../../shared/components/notification-center/notification-center.component';
+
+import { SearchService, SearchResults } from '../../core/services/search.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-main-layout',
@@ -33,6 +36,11 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
   isWebSocketConnected = false;
   notificationError: string | null = null;
 
+  searchControl = new FormControl('');
+  searchResults: SearchResults | null = null;
+  isSearching = false;
+  showSearchResults = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -40,13 +48,78 @@ export class MainLayoutComponent implements OnInit, OnDestroy {
     private projectService: ProjectControllerService,
     // ✅ NOUVEAUX SERVICES
     private notificationService: NotificationService,
-    private webSocketService: WebSocketService
+    private webSocketService: WebSocketService,
+    private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
     this.loadProjects();
     this.initializeNotifications();
+    this.setupSearch();
   }
+
+  setupSearch(): void {
+    this.searchControl.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        switchMap(query => {
+          if (!query || query.trim().length < 2) {
+            this.searchResults = null;
+            this.showSearchResults = false;
+            return [];
+          }
+
+          this.isSearching = true;
+          this.showSearchResults = true;
+          return this.searchService.search(query);
+        }),
+        takeUntil(this.destroy$)
+      )
+      .subscribe({
+        next: (results: any) => {
+          this.searchResults = results;
+          this.isSearching = false;
+        },
+        error: (error) => {
+          console.error('Search error:', error);
+          this.isSearching = false;
+        }
+      });
+  }
+
+    // ✅ AJOUTER cette méthode
+  onSearchResultSelected(): void {
+    this.showSearchResults = false;
+    this.searchControl.setValue('', { emitEvent: false });
+  }
+
+  // ✅ AJOUTER cette méthode
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.search-container')) {
+      this.showSearchResults = false;
+    }
+  }
+
+    @HostListener('document:keydown', ['$event'])
+      onKeydown(event: KeyboardEvent): void {
+        // Ctrl+K pour focus search
+        if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
+          event.preventDefault();
+          const searchInput = document.querySelector('.search-field input') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+          }
+        }
+
+        // Escape pour fermer search
+        if (event.key === 'Escape' && this.showSearchResults) {
+          this.showSearchResults = false;
+          this.searchControl.setValue('', { emitEvent: false });
+        }
+      }
 
   // ===== MÉTHODES EXISTANTES (inchangées) =====
 

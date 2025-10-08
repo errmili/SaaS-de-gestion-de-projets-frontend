@@ -1,0 +1,229 @@
+.member-detail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.you-badge {
+  font-size: 10px;
+  height: 20px;
+  background: #5d4e75;
+  color: white;
+}
+
+.modal-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* Avatar Section */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.member-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  margin-bottom: 16px;
+}
+
+.member-status {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #e0e0e0;
+  color: #757575;
+}
+
+.member-status.active {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+/* Edit Form */
+.edit-form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* Member Details */
+.member-details {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.member-name {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+.member-email {
+  text-align: center;
+  color: #6c757d;
+  margin: 0 0 32px 0;
+  font-size: 14px;
+}
+
+.detail-section {
+  margin-bottom: 32px;
+}
+
+.detail-section h4 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  color: #2c3e50;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.roles-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.roles-list mat-chip {
+  font-size: 13px;
+}
+
+.role-admin {
+  background: #f44336;
+  color: white;
+}
+
+.role-manager {
+  background: #ff9800;
+  color: white;
+}
+
+.role-user {
+  background: #2196f3;
+  color: white;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-row .label {
+  font-weight: 500;
+  color: #6c757d;
+  font-size: 14px;
+}
+
+.info-row .value {
+  color: #2c3e50;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-row .value mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.info-row .value mat-icon.verified {
+  color: #4caf50;
+}
+
+mat-chip.active {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+mat-chip.inactive {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+/* Actions */
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-top: 1px solid #e9ecef;
+}
+
+.left-actions,
+.right-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .modal-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+  }
+
+  .left-actions,
+  .right-actions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .left-actions button,
+  .right-actions button {
+    flex: 1;
+  }
+}

@@ -1,0 +1,61 @@
+.settings-page-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.page-header {
+  margin-bottom: 32px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+.page-header p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 16px;
+}
+
+.settings-card {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+.tab-content {
+  padding: 32px 24px;
+}
+
+::ng-deep .mat-mdc-tab-labels {
+  border-bottom: 1px solid #e9ecef;
+}
+
+::ng-deep .mat-mdc-tab-label {
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .settings-page-container {
+    padding: 16px;
+  }
+
+  .tab-content {
+    padding: 24px 16px;
+  }
+
+  ::ng-deep .mat-mdc-tab-label {
+    min-width: 80px;
+    padding: 0 12px;
+  }
+
+  .tab-icon {
+    display: none;
+  }
+}

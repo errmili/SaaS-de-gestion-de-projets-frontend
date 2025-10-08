@@ -1,0 +1,134 @@
+<div class="team-page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1>Team Members</h1>
+      <p>Manage your organization's team</p>
+    </div>
+    <div class="header-actions">
+      <button mat-icon-button
+              (click)="refreshTeam()"
+              matTooltip="Refresh"
+              [disabled]="isLoading">
+        <mat-icon>refresh</mat-icon>
+      </button>
+      <button mat-raised-button
+              color="primary"
+              disabled
+              matTooltip="Coming soon">
+        <mat-icon>person_add</mat-icon>
+        Invite Member
+      </button>
+    </div>
+  </div>
+
+  <!-- Tenant Stats -->
+  <div class="stats-section" *ngIf="currentTenant">
+    <mat-card class="stat-card">
+      <div class="stat-icon organization">
+        <mat-icon>business</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ currentTenant.name }}</div>
+        <div class="stat-label">Organization</div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon members">
+        <mat-icon>people</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ currentTenant.currentUsers }} / {{ currentTenant.maxUsers }}</div>
+        <div class="stat-label">Team Members</div>
+        <mat-progress-bar mode="determinate"
+                          [value]="getUsagePercentage()"
+                          [class]="getUsageColorClass()">
+        </mat-progress-bar>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon plan">
+        <mat-icon>workspace_premium</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ currentTenant.planType }}</div>
+        <div class="stat-label">Current Plan</div>
+      </div>
+    </mat-card>
+
+    <mat-card class="stat-card">
+      <div class="stat-icon status" [class.active]="currentTenant.isActive">
+        <mat-icon>{{ currentTenant.isActive ? 'check_circle' : 'cancel' }}</mat-icon>
+      </div>
+      <div class="stat-content">
+        <div class="stat-value">{{ currentTenant.isActive ? 'Active' : 'Inactive' }}</div>
+        <div class="stat-label">Status</div>
+      </div>
+    </mat-card>
+  </div>
+
+  <!-- Filters Section -->
+  <mat-card class="filters-card">
+    <div class="filters-content">
+      <!-- Search -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput
+               placeholder="Search members..."
+               [(ngModel)]="searchQuery"
+               (keyup.enter)="onSearch()">
+        <button mat-icon-button
+                matSuffix
+                *ngIf="searchQuery"
+                (click)="clearSearch()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <!-- Role Filter -->
+      <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Filter by Role</mat-label>
+        <mat-select [(ngModel)]="selectedRole"
+                    (selectionChange)="onRoleFilterChange()">
+          <mat-option *ngFor="let role of roles" [value]="role.value">
+            {{ role.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Search Button -->
+      <button mat-raised-button
+              color="primary"
+              (click)="onSearch()"
+              [disabled]="isLoading">
+        <mat-icon>search</mat-icon>
+        Search
+      </button>
+    </div>
+  </mat-card>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading team members...</p>
+  </div>
+
+  <!-- Team Members List -->
+  <div *ngIf="!isLoading">
+    <app-team-list
+      [members]="filteredMembers"
+      [currentUser]="currentUser"
+      (memberClicked)="openMemberDetails($event)">
+    </app-team-list>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading && filteredMembers.length === 0" class="empty-state">
+    <mat-icon>people_outline</mat-icon>
+    <h3>No team members found</h3>
+    <p *ngIf="searchQuery || selectedRole !== 'all'">Try adjusting your filters</p>
+    <p *ngIf="!searchQuery && selectedRole === 'all'">Start by inviting team members</p>
+  </div>
+</div>

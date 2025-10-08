@@ -1,0 +1,54 @@
+<div class="team-list-container">
+  <h2>Team Members ({{ members.length }})</h2>
+
+  <div class="members-grid">
+    <mat-card *ngFor="let member of members"
+              class="member-card"
+              [class.current-user]="isCurrentUser(member)"
+              (click)="onMemberClick(member)">
+
+      <!-- Avatar -->
+      <div class="member-header">
+        <img [src]="getAvatarUrl(member)"
+             alt="{{ member.fullName }}"
+             class="member-avatar">
+
+        <div class="member-status"
+             [class.active]="member.isActive"
+             [matTooltip]="member.isActive ? 'Active' : 'Inactive'">
+        </div>
+      </div>
+
+      <!-- Info -->
+      <div class="member-info">
+        <h3 class="member-name">
+          {{ member.fullName }}
+          <mat-chip *ngIf="isCurrentUser(member)" class="you-badge">You</mat-chip>
+        </h3>
+        <p class="member-email">{{ member.email }}</p>
+      </div>
+
+      <!-- Roles -->
+      <div class="member-roles">
+        <mat-chip *ngFor="let role of member.roles"
+                  [class]="getRoleBadgeColor(role)">
+          <mat-icon>{{ getRoleIcon([role]) }}</mat-icon>
+          {{ role }}
+        </mat-chip>
+      </div>
+
+      <!-- Meta -->
+      <div class="member-meta">
+        <div class="meta-item">
+          <mat-icon>schedule</mat-icon>
+          <span>Last login: {{ formatDate(member.lastLoginAt) }}</span>
+        </div>
+        <div class="meta-item" *ngIf="member.emailVerified">
+          <mat-icon class="verified">verified</mat-icon>
+          <span>Verified</span>
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+</div>

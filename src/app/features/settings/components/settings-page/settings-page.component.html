@@ -1,0 +1,47 @@
+<div class="settings-page-container">
+  <div class="page-header">
+    <h1>Settings</h1>
+    <p>Manage your account settings and preferences</p>
+  </div>
+
+  <mat-card class="settings-card">
+    <mat-tab-group [(selectedIndex)]="selectedTabIndex"
+                   (selectedIndexChange)="onTabChange($event)"
+                   animationDuration="300ms">
+
+      <!-- Profile Tab -->
+      <mat-tab label="Profile">
+        <ng-template matTabLabel>
+          <mat-icon class="tab-icon">person</mat-icon>
+          Profile
+        </ng-template>
+        <div class="tab-content">
+          <app-profile-settings></app-profile-settings>
+        </div>
+      </mat-tab>
+
+      <!-- Preferences Tab -->
+      <mat-tab label="Preferences">
+        <ng-template matTabLabel>
+          <mat-icon class="tab-icon">tune</mat-icon>
+          Preferences
+        </ng-template>
+        <div class="tab-content">
+          <app-preferences-settings></app-preferences-settings>
+        </div>
+      </mat-tab>
+
+      <!-- Account Tab -->
+      <mat-tab label="Account">
+        <ng-template matTabLabel>
+          <mat-icon class="tab-icon">admin_panel_settings</mat-icon>
+          Account
+        </ng-template>
+        <div class="tab-content">
+          <app-account-settings></app-account-settings>
+        </div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </mat-card>
+</div>

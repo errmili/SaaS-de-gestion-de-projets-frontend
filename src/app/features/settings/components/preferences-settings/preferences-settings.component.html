@@ -1,0 +1,196 @@
+<div class="preferences-settings-container">
+  <div class="section-header">
+    <div>
+      <h2>Notification Preferences</h2>
+      <p class="section-description">Manage how you receive notifications</p>
+    </div>
+    <button mat-stroked-button
+            (click)="resetToDefaults()"
+            [disabled]="isSaving">
+      <mat-icon>restart_alt</mat-icon>
+      Reset to Defaults
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <div *ngIf="!isLoading && preferences" class="preferences-content">
+
+    <!-- General Notifications -->
+    <mat-card class="preference-section">
+      <h3>General Notifications</h3>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>email</mat-icon>
+          <div>
+            <strong>Email Notifications</strong>
+            <p>Receive notifications via email</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.emailNotifications"
+                          (change)="onPreferenceChange('emailNotifications')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>notifications_active</mat-icon>
+          <div>
+            <strong>Push Notifications</strong>
+            <p>Receive browser push notifications</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.pushNotifications"
+                          (change)="onPreferenceChange('pushNotifications')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>wifi</mat-icon>
+          <div>
+            <strong>Real-time Updates</strong>
+            <p>Receive live updates via WebSocket</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.websocketNotifications"
+                          (change)="onPreferenceChange('websocketNotifications')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+    </mat-card>
+
+    <!-- Task Notifications -->
+    <mat-card class="preference-section">
+      <h3>Task Notifications</h3>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>assignment_ind</mat-icon>
+          <div>
+            <strong>Task Assigned</strong>
+            <p>When a task is assigned to you</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.taskAssigned"
+                          (change)="onPreferenceChange('taskAssigned')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>update</mat-icon>
+          <div>
+            <strong>Task Updated</strong>
+            <p>When a task you're involved in is updated</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.taskUpdated"
+                          (change)="onPreferenceChange('taskUpdated')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>check_circle</mat-icon>
+          <div>
+            <strong>Task Completed</strong>
+            <p>When a task is marked as completed</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.taskCompleted"
+                          (change)="onPreferenceChange('taskCompleted')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+    </mat-card>
+
+    <!-- Project Notifications -->
+    <mat-card class="preference-section">
+      <h3>Project Notifications</h3>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>group_add</mat-icon>
+          <div>
+            <strong>Project Invitation</strong>
+            <p>When you're invited to a project</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.projectInvitation"
+                          (change)="onPreferenceChange('projectInvitation')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>folder</mat-icon>
+          <div>
+            <strong>Project Updated</strong>
+            <p>When a project you're in is updated</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.projectUpdated"
+                          (change)="onPreferenceChange('projectUpdated')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+    </mat-card>
+
+    <!-- Other Preferences -->
+    <mat-card class="preference-section">
+      <h3>Other Preferences</h3>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>alternate_email</mat-icon>
+          <div>
+            <strong>Mentions</strong>
+            <p>When someone mentions you in a comment</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.commentMentions"
+                          (change)="onPreferenceChange('commentMentions')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>alarm</mat-icon>
+          <div>
+            <strong>Deadline Reminders</strong>
+            <p>Get reminded about upcoming deadlines</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.deadlineReminder"
+                          (change)="onPreferenceChange('deadlineReminder')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+
+      <div class="preference-item">
+        <div class="preference-info">
+          <mat-icon>volume_up</mat-icon>
+          <div>
+            <strong>Sound</strong>
+            <p>Play sound for notifications</p>
+          </div>
+        </div>
+        <mat-slide-toggle [(ngModel)]="preferences.soundEnabled"
+                          (change)="onPreferenceChange('soundEnabled')"
+                          color="primary">
+        </mat-slide-toggle>
+      </div>
+    </mat-card>
+
+  </div>
+</div>
