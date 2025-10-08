@@ -1,0 +1,87 @@
+<div class="search-results-container">
+  <!-- Loading -->
+  <div *ngIf="isSearching" class="search-loading">
+    <mat-spinner diameter="24"></mat-spinner>
+    <span>Searching...</span>
+  </div>
+
+  <!-- No results -->
+  <div *ngIf="!isSearching && results && !hasResults()" class="no-results">
+    <mat-icon>search_off</mat-icon>
+    <p>No results found</p>
+    <span>Try a different search term</span>
+  </div>
+
+  <!-- Results -->
+  <div *ngIf="!isSearching && results && hasResults()" class="search-results">
+
+    <!-- Tasks -->
+    <div *ngIf="results.tasks.length > 0" class="result-section">
+      <div class="section-header">
+        <mat-icon>{{ getTypeIcon('task') }}</mat-icon>
+        <span>{{ getTypeLabel('task') }}</span>
+        <span class="count">{{ results.tasks.length }}</span>
+      </div>
+      <div class="result-list">
+        <div *ngFor="let result of results.tasks"
+             class="result-item"
+             (click)="onResultClick(result)">
+          <mat-icon class="result-icon">{{ result.icon }}</mat-icon>
+          <div class="result-content">
+            <div class="result-title">{{ result.title }}</div>
+            <div class="result-subtitle">{{ result.subtitle }}</div>
+          </div>
+          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects -->
+    <div *ngIf="results.projects.length > 0" class="result-section">
+      <div class="section-header">
+        <mat-icon>{{ getTypeIcon('project') }}</mat-icon>
+        <span>{{ getTypeLabel('project') }}</span>
+        <span class="count">{{ results.projects.length }}</span>
+      </div>
+      <div class="result-list">
+        <div *ngFor="let result of results.projects"
+             class="result-item"
+             (click)="onResultClick(result)">
+          <mat-icon class="result-icon">{{ result.icon }}</mat-icon>
+          <div class="result-content">
+            <div class="result-title">{{ result.title }}</div>
+            <div class="result-subtitle">{{ result.subtitle }}</div>
+          </div>
+          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Members -->
+    <div *ngIf="results.members.length > 0" class="result-section">
+      <div class="section-header">
+        <mat-icon>{{ getTypeIcon('member') }}</mat-icon>
+        <span>{{ getTypeLabel('member') }}</span>
+        <span class="count">{{ results.members.length }}</span>
+      </div>
+      <div class="result-list">
+        <div *ngFor="let result of results.members"
+             class="result-item"
+             (click)="onResultClick(result)">
+          <mat-icon class="result-icon">{{ result.icon }}</mat-icon>
+          <div class="result-content">
+            <div class="result-title">{{ result.title }}</div>
+            <div class="result-subtitle">{{ result.subtitle }}</div>
+          </div>
+          <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div *ngIf="results && hasResults()" class="search-footer">
+    <span>{{ results.total }} result{{ results.total > 1 ? 's' : '' }} found</span>
+  </div>
+</div>

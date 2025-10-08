@@ -35,6 +35,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+//import { SearchResultsComponent } from './components/search-results/search-results.component';
 
 // ✅ SUPPRIMÉ - Import étrange du NotificationCenterComponent
 
@@ -77,6 +78,8 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
   // ✅ VIDE - Les déclarations doivent être dans SharedModule
   declarations: [
     // ConfirmDialogComponent
+
+   // SearchResultsComponent
   ]
 })
 export class MaterialModule { }

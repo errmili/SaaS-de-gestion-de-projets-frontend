@@ -1,56 +1,101 @@
 <div class="login-container">
-  <mat-card class="login-card">
-    <mat-card-header>
-      <mat-card-title>
-        <div class="logo">
-          <mat-icon>assignment</mat-icon>
-          ProjectHub
-        </div>
-      </mat-card-title>
-      <mat-card-subtitle>Sign in to your workspace</mat-card-subtitle>
-    </mat-card-header>
+  <!-- ===== LEFT SIDE - VISUAL ===== -->
+  <div class="login-visual">
+    <div class="visual-content">
+      <div class="visual-icon">
+        <mat-icon>assignment</mat-icon>
+      </div>
 
-    <mat-card-content>
+      <h1>Welcome to ProjectHub</h1>
+      <p>Manage your projects with ease and efficiency</p>
+
+      <div class="features-list">
+        <div class="feature-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Collaborative project management</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Real-time team collaboration</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon>check_circle</mat-icon>
+          <span>Track progress & analytics</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RIGHT SIDE - FORM ===== -->
+  <div class="login-form-section">
+    <div class="form-wrapper">
+      <!-- Logo -->
+      <div class="logo">
+        <mat-icon>assignment</mat-icon>
+        <span>ProjectHub</span>
+      </div>
+
+      <!-- Header -->
+      <div class="form-header">
+        <h2>Sign in to your workspace</h2>
+        <p>Enter your credentials to access your account</p>
+      </div>
+
+      <!-- Form -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Workspace Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Workspace</mat-label>
-          <input matInput formControlName="tenantSubdomain" placeholder="your-company">
+          <input matInput
+                 formControlName="tenantSubdomain"
+                 placeholder="your-company">
           <mat-hint>.projecthub.com</mat-hint>
           <mat-icon matSuffix>business</mat-icon>
         </mat-form-field>
 
+        <!-- Email Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" placeholder="you@company.com">
+          <input matInput
+                 type="email"
+                 formControlName="email"
+                 placeholder="you@company.com">
           <mat-icon matSuffix>email</mat-icon>
         </mat-form-field>
 
+        <!-- Password Field -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
           <input matInput
                  [type]="hidePassword ? 'password' : 'text'"
                  formControlName="password">
-          <button mat-icon-button matSuffix
+          <button mat-icon-button
+                  matSuffix
                   (click)="hidePassword = !hidePassword"
-                  type="button">
+                  type="button"
+                  [attr.aria-label]="'Hide password'">
             <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" type="submit"
+        <!-- Submit Button -->
+        <button mat-raised-button
+                color="primary"
+                type="submit"
                 class="full-width login-button"
                 [disabled]="!loginForm.valid || isLoading">
           <mat-icon *ngIf="isLoading" class="spinning">refresh</mat-icon>
           {{ isLoading ? 'Signing in...' : 'Sign In' }}
         </button>
       </form>
-    </mat-card-content>
 
-    <mat-card-actions>
-      <div class="register-link">
-        Don't have an account?
-        <a routerLink="/auth/register">Create workspace</a>
+      <!-- Footer -->
+      <div class="form-footer">
+        <div class="register-link">
+          Don't have an account?
+          <a routerLink="/auth/register">Create workspace</a>
+        </div>
       </div>
-    </mat-card-actions>
-  </mat-card>
+    </div>
+  </div>
 </div>

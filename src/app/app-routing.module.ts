@@ -35,8 +35,20 @@ const routes: Routes = [
         loadChildren: () => import('./features/projects/projects.module').then(m => m.ProjectsModule)
       },
       {
-        path: 'files', // ✅ AJOUTER
+        path: 'settings',
+        loadChildren: () => import('./features/settings/settings.module').then(m => m.SettingsModule)
+      },
+      {
+        path: 'files',
         loadChildren: () => import('./features/files/files.module').then(m => m.FilesModule)
+      },
+      {
+        path: 'team',
+        loadChildren: () => import('./features/team/team.module').then(m => m.TeamModule)
+      },
+      {
+        path: 'reports',
+        loadChildren: () => import('./features/reports/reports.module').then(m => m.ReportsModule)
       },
       {
         path: '',

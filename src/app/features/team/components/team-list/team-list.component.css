@@ -1,0 +1,163 @@
+.team-list-container {
+  width: 100%;
+}
+
+.team-list-container h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 24px 0;
+  color: #2c3e50;
+}
+
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.member-card {
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.member-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.member-card.current-user {
+  border: 2px solid #5d4e75;
+}
+
+.member-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.member-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.member-status {
+  position: absolute;
+  bottom: 0;
+  right: calc(50% - 45px);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  border: 3px solid white;
+}
+
+.member-status.active {
+  background: #4caf50;
+}
+
+.member-info {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.member-name {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.you-badge {
+  font-size: 10px;
+  height: 20px;
+  line-height: 20px;
+  background: #5d4e75;
+  color: white;
+}
+
+.member-email {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0;
+  word-break: break-word;
+}
+
+.member-roles {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.member-roles mat-chip {
+  font-size: 12px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.member-roles mat-chip mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.role-admin {
+  background: #f44336;
+  color: white;
+}
+
+.role-manager {
+  background: #ff9800;
+  color: white;
+}
+
+.role-user {
+  background: #2196f3;
+  color: white;
+}
+
+.member-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6c757d;
+}
+
+.meta-item mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.meta-item mat-icon.verified {
+  color: #4caf50;
+}
+
+@media (max-width: 768px) {
+  .members-grid {
+    grid-template-columns: 1fr;
+  }
+}

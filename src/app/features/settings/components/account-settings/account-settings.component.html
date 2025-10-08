@@ -1,0 +1,73 @@
+<div class="account-settings-container">
+  <h2>Account Information</h2>
+  <p class="section-description">View your account details and status</p>
+
+  <mat-card class="info-card">
+    <h3>Account Details</h3>
+
+    <div class="info-item">
+      <span class="info-label">Account ID</span>
+      <span class="info-value">{{ currentUser?.id }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Email</span>
+      <span class="info-value">{{ currentUser?.email }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Email Verified</span>
+      <mat-chip [class.verified]="currentUser?.emailVerified"
+                [class.unverified]="!currentUser?.emailVerified">
+        {{ currentUser?.emailVerified ? 'Verified' : 'Not Verified' }}
+      </mat-chip>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Account Status</span>
+      <mat-chip [class.active]="currentUser?.isActive"
+                [class.inactive]="!currentUser?.isActive">
+        {{ currentUser?.isActive ? 'Active' : 'Inactive' }}
+      </mat-chip>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Member Since</span>
+      <span class="info-value">{{ formatDate(currentUser?.createdAt) }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Last Login</span>
+      <span class="info-value">{{ formatDate(currentUser?.lastLoginAt) }}</span>
+    </div>
+
+    <div class="info-item">
+      <span class="info-label">Roles</span>
+      <div class="roles-container">
+        <mat-chip *ngFor="let role of currentUser?.roles">{{ role }}</mat-chip>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Danger Zone -->
+  <mat-card class="danger-card">
+    <h3>Danger Zone</h3>
+    <p>These actions are permanent and cannot be undone</p>
+
+    <div class="danger-actions">
+      <button mat-stroked-button color="warn" disabled>
+        <mat-icon>lock</mat-icon>
+        Change Password
+      </button>
+      <span class="coming-soon">Coming Soon</span>
+    </div>
+
+    <div class="danger-actions">
+      <button mat-stroked-button color="warn" disabled>
+        <mat-icon>delete_forever</mat-icon>
+        Delete Account
+      </button>
+      <span class="coming-soon">Coming Soon</span>
+    </div>
+  </mat-card>
+</div>

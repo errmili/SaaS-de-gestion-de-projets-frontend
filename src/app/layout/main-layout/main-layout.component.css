@@ -12,6 +12,7 @@
   padding: 0;
   height: 64px;
   z-index: 1000;
+  margin-top: 12px;
 }
 
 .header-content {
@@ -277,6 +278,55 @@
   font-weight: 600;
   font-size: 12px;
   text-transform: uppercase;
+}
+
+/* ces styles pour la search */
+.search-container {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 24px;
+  position: relative;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.search-results-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Backdrop pour fermer la search */
+.search-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    max-width: unset;
+    margin: 0 12px;
+  }
 }
 
 @keyframes slideDownError {
