@@ -1,0 +1,152 @@
+<div class="member-detail-container">
+  <!-- Header -->
+  <div class="modal-header">
+    <h2>
+      {{ isEditing ? 'Edit Member' : 'Member Details' }}
+      <mat-chip *ngIf="isCurrentUser()" class="you-badge">You</mat-chip>
+    </h2>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- Content -->
+  <div class="modal-content">
+    <!-- Avatar Section -->
+    <div class="avatar-section">
+      <img [src]="getAvatarUrl()"
+           alt="{{ member.fullName }}"
+           class="member-avatar">
+      <div class="member-status"
+           [class.active]="member.isActive">
+        {{ member.isActive ? 'Active' : 'Inactive' }}
+      </div>
+    </div>
+
+    <!-- Form or Details -->
+    <form [formGroup]="editForm" *ngIf="isEditing" class="edit-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Avatar URL</mat-label>
+        <mat-icon matPrefix>link</mat-icon>
+        <input matInput formControlName="avatarUrl">
+        <mat-hint>Optional - Leave empty for default avatar</mat-hint>
+      </mat-form-field>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput formControlName="firstName">
+          <mat-error *ngIf="editForm.get('firstName')?.hasError('required')">
+            Required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <mat-icon matPrefix>person</mat-icon>
+          <input matInput formControlName="lastName">
+          <mat-error *ngIf="editForm.get('lastName')?.hasError('required')">
+            Required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <!-- Member Info (non-edit mode) -->
+    <div *ngIf="!isEditing" class="member-details">
+      <h3 class="member-name">{{ member.fullName }}</h3>
+      <p class="member-email">{{ member.email }}</p>
+
+      <!-- Roles -->
+      <div class="detail-section">
+        <h4>Roles</h4>
+        <div class="roles-list">
+          <mat-chip *ngFor="let role of member.roles"
+                    [class]="getRoleBadgeColor(role)">
+            {{ role }}
+          </mat-chip>
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <div class="detail-section">
+        <h4>Account Information</h4>
+
+        <div class="info-row">
+          <span class="label">Member ID</span>
+          <span class="value">{{ member.id }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Email Verified</span>
+          <span class="value">
+            <mat-icon [class.verified]="member.emailVerified">
+              {{ member.emailVerified ? 'check_circle' : 'cancel' }}
+            </mat-icon>
+            {{ member.emailVerified ? 'Verified' : 'Not Verified' }}
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Status</span>
+          <span class="value">
+            <mat-chip [class.active]="member.isActive"
+                      [class.inactive]="!member.isActive">
+              {{ member.isActive ? 'Active' : 'Inactive' }}
+            </mat-chip>
+          </span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Member Since</span>
+          <span class="value">{{ formatDate(member.createdAt) }}</span>
+        </div>
+
+        <div class="info-row">
+          <span class="label">Last Login</span>
+          <span class="value">{{ formatDate(member.lastLoginAt) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="modal-actions">
+    <div class="left-actions">
+      <button mat-stroked-button
+              color="warn"
+              (click)="deactivateMember()"
+              *ngIf="canDeactivate() && !isEditing"
+              [disabled]="isSaving">
+        <mat-icon>person_remove</mat-icon>
+        Deactivate Member
+      </button>
+    </div>
+
+    <div class="right-actions">
+      <button mat-button
+              (click)="isEditing ? cancelEdit() : close()"
+              [disabled]="isSaving">
+        {{ isEditing ? 'Cancel' : 'Close' }}
+      </button>
+
+      <button mat-raised-button
+              color="primary"
+              *ngIf="!isEditing && canEdit()"
+              (click)="startEdit()">
+        <mat-icon>edit</mat-icon>
+        Edit
+      </button>
+
+      <button mat-raised-button
+              color="primary"
+              *ngIf="isEditing"
+              (click)="saveChanges()"
+              [disabled]="editForm.invalid || isSaving">
+        <mat-spinner *ngIf="isSaving" diameter="20"></mat-spinner>
+        <span *ngIf="!isSaving">Save Changes</span>
+      </button>
+    </div>
+  </div>
+</div>

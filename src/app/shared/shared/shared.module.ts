@@ -13,6 +13,7 @@ import { NotificationBadgeDirective } from '../directives/notification-badge.dir
 // ✅ CORRECTION - Import du composant existant avec bon chemin
 import { CreateProjectModalComponent } from '../../features/dashboard/components/modals/create-project-modal/create-project-modal.component';
 import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dialog.component';
+import { SearchResultsComponent } from '../components/search-results/search-results.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dia
     // ✅ NOUVEAUX COMPOSANTS - Notifications
     NotificationCenterComponent,
     NotificationBadgeDirective,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    SearchResultsComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +45,8 @@ import { ConfirmDialogComponent } from '../components/confirm-dialog/confirm-dia
     // ✅ NOUVEAUX EXPORTS - Composants notifications
     NotificationCenterComponent,
     NotificationBadgeDirective,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    SearchResultsComponent
   ]
 })
 export class SharedModule { }

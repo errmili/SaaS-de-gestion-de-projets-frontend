@@ -1,0 +1,106 @@
+.preferences-settings-container {
+  max-width: 800px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+.section-description {
+  color: #6c757d;
+  margin: 0;
+  font-size: 14px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 60px 20px;
+}
+
+.preferences-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.preference-section {
+  padding: 24px;
+}
+
+.preference-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+}
+
+.preference-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.preference-item:last-child {
+  border-bottom: none;
+}
+
+.preference-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.preference-info mat-icon {
+  color: #5d4e75;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.preference-info strong {
+  display: block;
+  font-size: 15px;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
+
+.preference-info p {
+  font-size: 13px;
+  color: #6c757d;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-header button {
+    width: 100%;
+  }
+
+  .preference-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .preference-info {
+    width: 100%;
+  }
+}

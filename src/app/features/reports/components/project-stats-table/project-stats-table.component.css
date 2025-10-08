@@ -1,0 +1,95 @@
+.table-card {
+  padding: 20px;
+}
+
+.stats-table {
+  width: 100%;
+}
+
+.project-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-cell strong {
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.project-key {
+  color: #6c757d;
+  font-size: 12px;
+  font-family: monospace;
+}
+
+.status-chip {
+  font-size: 11px;
+  height: 24px;
+}
+
+.status-chip.todo {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.status-chip.in-progress {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.status-chip.done {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.completion-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.completion-value {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+mat-progress-bar {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.empty-table {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-table mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #6c757d;
+  opacity: 0.5;
+  margin-bottom: 16px;
+}
+
+.empty-table p {
+  color: #6c757d;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .stats-table {
+    font-size: 12px;
+  }
+
+  .completion-cell {
+    min-width: 100px;
+  }
+}

@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// import { SharedModule } from '../shared/shared.module'; // ✅ AJOUTER
-// import { MaterialModule } from '../material.module'; // Si tu l'as
-import { RouterModule } from '@angular/router'; // ✅ AJOUTER
+// import { SharedModule } from '../shared/shared.module';
+// import { MaterialModule } from '../material.module';
+import { RouterModule } from '@angular/router';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { MaterialModule } from '../shared/material.module';
 import { SharedModule } from '../shared/shared/shared.module';
 import { AuthLayoutComponent } from './auth-layout/auth-layout.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -15,9 +16,10 @@ import { AuthLayoutComponent } from './auth-layout/auth-layout.component';
   ],
   imports: [
     CommonModule,
-    SharedModule,     // ✅ AJOUTER
-    MaterialModule,   // ✅ AJOUTER
-    RouterModule      // ✅ AJOUTER
+    SharedModule,
+    MaterialModule,
+    RouterModule,
+    ReactiveFormsModule
   ],
   exports: [
     MainLayoutComponent,

@@ -1,0 +1,128 @@
+.account-settings-container {
+  max-width: 700px;
+}
+
+.account-settings-container h2 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+}
+
+.section-description {
+  color: #6c757d;
+  margin: 0 0 24px 0;
+  font-size: 14px;
+}
+
+.info-card {
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.info-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #2c3e50;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.info-value {
+  color: #2c3e50;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+}
+
+.roles-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+mat-chip {
+  font-size: 12px;
+}
+
+mat-chip.verified,
+mat-chip.active {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+mat-chip.unverified,
+mat-chip.inactive {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+/* Danger Zone */
+.danger-card {
+  padding: 24px;
+  border: 2px solid #ffebee;
+  background: #fff9f9;
+}
+
+.danger-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #d32f2f;
+}
+
+.danger-card p {
+  color: #6c757d;
+  margin: 0 0 20px 0;
+  font-size: 14px;
+}
+
+.danger-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.danger-actions:last-child {
+  margin-bottom: 0;
+}
+
+.coming-soon {
+  font-size: 12px;
+  color: #6c757d;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .danger-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .danger-actions button {
+    width: 100%;
+  }
+}
