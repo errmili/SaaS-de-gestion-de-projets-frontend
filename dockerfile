@@ -7,13 +7,14 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build:prod
 
-# Stage 2: Nginx pour Render
+# Stage 2: Nginx
 FROM nginx:alpine
 RUN rm -rf /usr/share/nginx/html/*
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /app/dist/projecthub-frontend /usr/share/nginx/html
 
-EXPOSE 10000
+# ✅ CHANGÉ ICI : 10000 → 80
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 
